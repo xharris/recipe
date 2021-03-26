@@ -1,0 +1,8 @@
+.expandable {
+  display: flex;
+  flex-direction: column;
+
+  &:not(&--expanded) {
+    overflow: hidden;
+  }
+}

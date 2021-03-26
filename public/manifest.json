@@ -1,0 +1,30 @@
+{
+  "short_name": "Squeakr",
+  "name": "Some kind of microblogging, meme-sharing, group messaging website",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "96x96 48x48 24x24",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "icons8-mouse-animal-24",
+      "type": "image/png",
+      "sizes": "24x24"
+    },
+    {
+      "src": "icons8-mouse-animal-48",
+      "type": "image/png",
+      "sizes": "48x48"
+    },
+    {
+      "src": "icons8-mouse-animal-96",
+      "type": "image/png",
+      "sizes": "96x96"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}

@@ -1,0 +1,23 @@
+html,
+body,
+#root,
+.App {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  font-family: Proggy;
+}
+
+* {
+  font-family: Proggy;
+}
+
+.App {
+  box-sizing: border-box;
+  color: #212121;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}

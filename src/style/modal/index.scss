@@ -1,0 +1,22 @@
+.dialog {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  .MuiPaper-root {
+    display: flex;
+    flex-direction: row;
+    padding: 15px 20px;
+  }
+
+  &--close {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 10000;
+  }
+
+  div[role="dialog"] {
+    padding: 20px;
+  }
+}

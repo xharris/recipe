@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "*": ["src/*"],
+      "component": ["src/js/component"],
+      "api": ["src/js/api"],
+      "util": ["src/js/util"],
+      "style": ["src/style"]
+    }
+  }
+}

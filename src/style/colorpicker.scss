@@ -1,0 +1,43 @@
+.colorpicker {
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: space-between;
+
+  &--label {
+    white-space: nowrap;
+    margin-right: 5px;
+  }
+
+  &--trigger {
+    width: 21px;
+    height: 21px;
+    outline: none;
+  }
+
+  &--picker {
+    position: absolute !important;
+    z-index: 100;
+
+    background: white;
+    box-shadow: 0px 0px 4px 1px gray;
+    border-radius: 2px;
+
+    > div:nth-child(1) {
+      left: 0px !important;
+    }
+
+    > div:nth-child(2) {
+      left: 1px !important;
+    }
+    /*
+    > div {
+      padding-right: 5px;
+    }
+
+    > div > span > div {
+      margin: 0px !important;
+    }
+    */
+  }
+}

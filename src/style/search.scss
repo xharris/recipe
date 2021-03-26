@@ -1,0 +1,45 @@
+.search {
+  display: flex;
+
+  > *:not(:last-child) {
+    margin-right: 5px;
+  }
+
+  &--input {
+    flex: 0 1 100%;
+  }
+
+  &--block {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: #bdbdbd;
+    border-radius: 2px;
+    box-sizing: border-box;
+    height: 26px;
+    margin-right: 2px;
+    margin-bottom: 2px;
+  }
+
+  &--block_label {
+    font-size: 0.8rem;
+    padding: 0px 4px;
+    line-height: 12px;
+  }
+
+  &--block > .input {
+    height: 22px;
+    width: 130px;
+  }
+
+  &--suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0px;
+    right: 0px;
+    display: inline-flex;
+    padding: 2px;
+    background: #fafafa;
+    flex-wrap: wrap;
+  }
+}

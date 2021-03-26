@@ -1,0 +1,49 @@
+.dragdrop {
+  position: relative;
+
+  &--dropzone {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    right: 50%;
+    bottom: 50%;
+    background-color: transparent;
+
+    transition: ease-in-out 0.1s all;
+  }
+
+  &:not(&--open) > &--dropzone {
+    //z-index: -1000;
+  }
+  &--closed {
+    pointer-events: none;
+  }
+  &--dropzone {
+    //height: 0px;
+  }
+
+  &--open > &--dropzone {
+    top: 0%;
+    left: 0%;
+    right: 0%;
+    bottom: 0%;
+    //z-index: 1000;
+  }
+
+  &--dropping > &--dropzone {
+    box-shadow: inset 0px 0px 2px 1px #212121;
+    // background-color: transparentize(#212121, 0.5);
+    border-radius: 1px;
+    // border: 2px dashed #eceff1;
+  }
+}
+
+.dndlist {
+  &--line {
+    height: 0px;
+    border: 1px #8bc34a solid;
+    box-shadow: 0px 0px 3px #8bc34a;
+
+    transition: ease-in-out all 0.2s;
+  }
+}

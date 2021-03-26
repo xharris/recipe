@@ -1,0 +1,121 @@
+{
+  "name": "squeakr",
+  "version": "0.3.0",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xharris/social.git"
+  },
+  "bugs": {
+    "url": "https://github.com/xharris/social/issues"
+  },
+  "dependencies": {
+    "@craco/craco": "^5.6.4",
+    "@ctrl/tinycolor": "^3.2.0",
+    "@emotion/core": "^10.0.28",
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "atob": "^2.1.2",
+    "axios": "^0.19.2",
+    "boardgame.io": "^0.42.2",
+    "body-parser": "^1.19.0",
+    "cheerio": "^1.0.0-rc.5",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dompurify": "^2.2.2",
+    "dotenv": "^8.1.0",
+    "emoji-mart": "^3.0.0",
+    "emotion": "^10.0.27",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
+    "fs-extra": "^9.0.1",
+    "helmet": "^3.21.1",
+    "js-cookie": "^2.2.1",
+    "js-cookies": "^1.0.4",
+    "jsonwebtoken": "^8.5.1",
+    "jsx-to-string": "^1.4.0",
+    "knex": "^0.19.5",
+    "masonry-layout": "^4.2.2",
+    "mime-types": "^2.1.27",
+    "mongoose": "^5.9.5",
+    "morgan": "^1.9.1",
+    "ms": "^2.1.2",
+    "nanoid": "^3.1.16",
+    "node-fs-extra": "^0.8.2",
+    "node-sass": "^4.14.1",
+    "react": "^16.13.1",
+    "react-color": "^2.18.1",
+    "react-contenteditable": "^3.3.5",
+    "react-dnd": "^11.1.3",
+    "react-dnd-html5-backend": "^11.1.3",
+    "react-dom": "^16.13.1",
+    "react-html-parser": "^2.0.2",
+    "react-markdown": "^5.0.3",
+    "react-refresh": "^0.9.0",
+    "react-responsive-masonry": "^2.1.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^4.0.1",
+    "react-stack-grid": "^0.7.1",
+    "redux": "^4.0.5",
+    "remark-gfm": "^1.0.0",
+    "secure-password": "^3.1.0",
+    "socket.io": "^3.0.4",
+    "socket.io-client": "^3.0.4",
+    "uuid": "^8.3.2",
+    "video-react": "^0.14.1",
+    "video.js": "^7.10.2"
+  },
+  "devDependencies": {
+    "concurrently": "^5.0.0",
+    "cross-env": "^7.0.2",
+    "dot-env": "0.0.1",
+    "env-cmd": "^10.1.0",
+    "eslint-config-react-app": "^6.0.0",
+    "nodemon": "^1.19.3"
+  },
+  "scripts": {
+    "build": "node build.js",
+    "test": "craco test",
+    "eject": "craco eject",
+    "frontend": "craco start",
+    "frontend:dev": "npx cross-env PORT=3001 yarn run frontend",
+    "backend": "node -r dotenv/config ./backend/index.js",
+    "backend:dev": "cross-env NODE_ENV=development nodemon --watch backend ./backend/index.js",
+    "dev": "concurrently --handle-input -n back,front \"yarn run backend:dev\" \"yarn run frontend:dev\"",
+    "start": "cd ./build && node ./backend/index.js",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false yarn run build"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/__tests__/**",
+      "*.test.js",
+      "*.spec.js"
+    ],
+    "events": {
+      "start": "cls || clear"
+    }
+  },
+  "eslintConfig": {
+    "extends": "react-app",
+    "rules": {
+      "react-hooks/exhaustive-deps": "off"
+    }
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:3000"
+}

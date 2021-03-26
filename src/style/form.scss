@@ -1,0 +1,64 @@
+.form {
+  display: flex;
+  flex-direction: column;
+
+  > *:not(:last-child) {
+    margin-bottom: 10px !important;
+  }
+
+  &--input {
+    margin: 0px !important;
+
+    input {
+      // font-size: 12px;
+    }
+  }
+
+  &--checkbox {
+    display: flex;
+    user-select: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 2px;
+
+    transition: all ease-in-out 0.2s;
+
+    > input {
+      display: none;
+    }
+
+    > .icon {
+      font-size: 18px;
+      margin-right: 5px;
+    }
+
+    > .text {
+      font-size: 14px;
+      line-height: 18px;
+    }
+  }
+
+  .button--type-submit {
+    align-self: flex-start;
+  }
+
+  &--group {
+    display: flex;
+  }
+
+  &--group_title {
+    font-size: 1.5rem;
+    font-weight: 100;
+    margin-right: 10px;
+    flex: 0 1 50%;
+  }
+
+  &--group_children {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &--group_children > *:not(:last-child) {
+    margin-bottom: 5px;
+  }
+}

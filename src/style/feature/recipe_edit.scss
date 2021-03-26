@@ -1,0 +1,13 @@
+.page_recipe_edit {
+  &--body > * {
+    margin-bottom: 15px;
+  }
+
+  &--path {
+    display: flex;
+  }
+
+  &--path > * {
+    margin-right: 5px;
+  }
+}

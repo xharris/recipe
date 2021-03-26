@@ -1,0 +1,66 @@
+.editable {
+  flex: 0 1 100%;
+  line-height: 16px;
+  font-size: 13px;
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  border-radius: 2px;
+  padding: 2px 4px;
+
+  transition: ease-in-out all 0.2s;
+
+  &:not(&--disabled) {
+    &:focus,
+    &:hover {
+      outline: none;
+      border-color: #bdbdbd;
+    }
+  }
+
+  &--line-single {
+    white-space: nowrap;
+  }
+}
+
+/*
+.textinput {
+  margin: 0px;
+  padding: 0px 4px;
+  font-size: 13px;
+  line-height: 12px;
+  min-width: 18px;
+  min-height: 18px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #000;
+  font-family: inherit;
+
+  &--editable {
+    border: none;
+    outline: none;
+    font-size: 12px;
+  }
+
+  &--line-single {
+    white-space: nowrap;
+    overflow: hidden;
+
+    * {
+      display: inline;
+      white-space: nowrap;
+      line-height: 14px;
+    }
+    br {
+      display: none;
+    }
+    > span {
+      padding: 0px 4px;
+    }
+  }
+
+  &--line-multi {
+    border: 1px solid;
+    border-radius: 2px;
+    height: 16px;
+  }
+}
+*/

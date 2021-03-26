@@ -1,0 +1,44 @@
+.input {
+  outline: none;
+  border: 1px solid transparent;
+  // border-bottom: 1px solid #bdbdbd;
+  background: #eeeeee;
+  box-shadow: 0px 0px 3px 0px transparent;
+  border-radius: 3px;
+  padding: 3px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+
+  transition: all ease-in-out 0.2s;
+
+  > * {
+    display: inline-block;
+    cursor: initial;
+  }
+
+  &--input::placeholder {
+    font-style: italic;
+  }
+
+  &:not(:disabled) {
+    cursor: text;
+
+    &:hover,
+    &--focused {
+      border: 1px solid #bdbdbd;
+      box-shadow: 0px 0px 3px 0px #bdbdbd;
+    }
+  }
+
+  &--input {
+    resize: none;
+    // padding: 6px 8px;
+    outline: 0px;
+    border: 0px;
+    background: transparent;
+    font-family: Arial;
+    box-sizing: border-box;
+    padding: 0px;
+  }
+}

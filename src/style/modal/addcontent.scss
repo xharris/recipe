@@ -1,0 +1,9 @@
+.addcontent {
+  > .MuiPaper-root {
+    display: flex;
+
+    > .iconbutton {
+      margin: 5px;
+    }
+  }
+}

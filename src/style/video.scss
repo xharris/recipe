@@ -1,0 +1,7 @@
+@import "~video-react/styles/scss/video-react";
+
+.video {
+  &--preview {
+    pointer-events: none;
+  }
+}

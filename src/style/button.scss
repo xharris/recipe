@@ -1,0 +1,62 @@
+.button {
+  display: flex;
+  align-items: center;
+  transition: all ease-in-out 0.2s;
+  user-select: none;
+  font-size: $font-size-p;
+  white-space: nowrap;
+
+  > * {
+    font-size: inherit;
+    transition: all ease-in-out 0.2s !important;
+  }
+
+  &--type-button,
+  &--type-submit {
+    border-radius: 2px;
+    background-color: transparent;
+    color: $icon-primary-color;
+    cursor: pointer;
+    border: solid transparent;
+    padding: 3px 5px;
+    text-decoration: none;
+  }
+
+  &[disabled] {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  &--type-link {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0px;
+  }
+
+  svg {
+    vertical-align: bottom;
+    font-size: 1.25rem !important;
+  }
+
+  svg + &--label {
+    margin-left: 3px;
+  }
+
+  &--rounded {
+    border-radius: 100%;
+    border: 1px solid;
+    height: 16px;
+    width: 16px;
+    padding: 1px;
+  }
+
+  &--type-button > &--label,
+  &--type-submit > &--label {
+    text-decoration: none;
+  }
+
+  .icon ~ &--label {
+    margin-left: 2px;
+  }
+}

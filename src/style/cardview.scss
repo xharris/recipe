@@ -1,0 +1,9 @@
+.cardview {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  > .card {
+    margin-bottom: 10px;
+  }
+}

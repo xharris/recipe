@@ -1,0 +1,30 @@
+.recipe_list {
+  width: 100%;
+
+  tr {
+    font-size: $font-size-p;
+    outline: 1px solid #e0e0e0;
+  }
+
+  td {
+    font-size: inherit;
+    padding: 4px 8px;
+  }
+
+  &--col_title {
+    font-weight: 600;
+  }
+
+  &--col_desc {
+    color: #9e9e9e;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    max-width: 0;
+  }
+
+  &--col-fit {
+    width: 1%;
+    white-space: nowrap;
+  }
+}

@@ -1,0 +1,28 @@
+.link {
+  &--thumbnail {
+    display: flex;
+    align-items: flex-start;
+    max-width: 100%;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    border-radius: 4px;
+    padding: 2px;
+    box-sizing: border-box;
+  }
+
+  &--thumbnail > &--title {
+    background: rgba(33, 33, 33, 0.8);
+    border-radius: 4px;
+    padding: 1px 4px;
+    box-sizing: border-box;
+    font-size: 0.75rem;
+  }
+
+  &--loading {
+    height: 50px;
+    width: 270px;
+    opacity: 0.5;
+    border-radius: 4px;
+  }
+}

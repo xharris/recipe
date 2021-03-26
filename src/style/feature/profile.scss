@@ -1,0 +1,22 @@
+.page_profile {
+  &--body {
+    display: flex !important;
+    flex-direction: row;
+  }
+
+  &--left {
+    flex: 30% 0 1;
+  }
+
+  &--right {
+    flex: 100%;
+    padding: 0px 20px;
+  }
+
+  &--right > * {
+    margin-bottom: 15px;
+  }
+  &--subpages {
+    display: flex;
+  }
+}
