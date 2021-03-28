@@ -2,7 +2,6 @@
   display: flex;
   align-items: center;
   transition: all ease-in-out 0.2s;
-  user-select: none;
   font-size: $font-size-p;
   white-space: nowrap;
 
@@ -32,6 +31,10 @@
     border: none;
     cursor: pointer;
     padding: 0px;
+  }
+
+  &--type-button {
+    user-select: none;
   }
 
   svg {

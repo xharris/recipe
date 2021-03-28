@@ -39,7 +39,7 @@ const Button = forwardRef(
     const { getColor } = useThemeContext()
     const [anchor, setAnchor] = useState()
     const match = useRouteMatch(to)
-    const outlined = _outlined || match
+    const outlined = !!(_outlined || match)
     const Content = () => (
       <>
         {icon && iconPlacement !== "right" && <Icon icon={icon} />}

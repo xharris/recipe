@@ -1,10 +1,36 @@
 const { Api, Schema } = require("../api")
 const { status, queryCheck, ref } = require("../api/util")
+const diff = require("diff")
 
 const ingredient = Schema({
   amount: Number,
   values: [String],
 })
+
+const history = Schema(
+  {
+    message: String,
+    original: String,
+    patch: String,
+    patch_readable: {
+      type: String,
+      get: function () {
+        const patch = diff.parsePatch(this.patch)
+        console.log("CHANGE", this.date_created)
+        patch.forEach((p) => console.log(p.hunks))
+        // diff.diffChars(
+        //   htmlToText(doc.text),
+        //   htmlToText(req.body.text)
+        // )
+        return this.patch
+      },
+    },
+  },
+  {
+    toJSON: { getters: true },
+    toObject: { getters: true },
+  }
+)
 
 const recipe = new Api(
   "recipe",
@@ -34,6 +60,7 @@ const recipe = new Api(
     servings: Number,
     tags: [String],
     ingredients: [ingredient],
+    history: [history],
   },
   {
     toJSON: { getters: true },
@@ -51,12 +78,14 @@ const re_servings = /servings?|serves?/i
 const re_tags = /tags?:?/i
 const re_ingredient_ignore = /of/i
 
-const parseRecipeText = (text) => {
-  const lines = text
+const htmlToText = (html) =>
+  html
     .replace(/^(<\/?div>|<br\/?>)+/i, "")
     .replace(/(<\/?div>|<br\/?>)+$/i, "")
     .replace(/(<\/?div>|<br\/?>)+/gi, "\n")
-    .split(/[\r\n]/)
+
+const parseRecipeText = (html) => {
+  const text = htmlToText(html)
   let title
   const ingredients = []
   const body = []
@@ -65,8 +94,8 @@ const parseRecipeText = (text) => {
   let max_time = 0
   const attributes = {}
 
+  const lines = text.split(/[\r\n]/)
   const split = (l) => l.split(/\s+/i)
-
   for (const line of lines) {
     // ingredient
     if (re_ingredient.test(line)) {
@@ -122,7 +151,7 @@ const parseRecipeText = (text) => {
       let type, amount, str_value
       const list_values = []
       for (const elem of elements) {
-        console.log(type, elem)
+        // console.log(type, elem)
         if (!isNaN(parseFloat(elem))) amount = parseFloat(elem)
         else if (re_servings.test(elem)) type = "servings"
         else if (re_tags.test(elem)) type = "tags"
@@ -148,6 +177,7 @@ const parseRecipeText = (text) => {
   }
 
   return {
+    text,
     title,
     min_time,
     max_time,
@@ -165,7 +195,11 @@ const verifyRecipe = (res, info) => {
   return true
 }
 
-recipe.auth.any = ["/create", "/:id/commit"]
+recipe.auth.any = [
+  "/create",
+  "/:id/commit", // /\/(\w+)\/commit/,
+  { method: "DELETE", path: /\/(\w+)/ },
+]
 
 recipe.router.post("/create", (req, res) => {
   const new_recipe = parseRecipeText(req.body.text)
@@ -186,17 +220,33 @@ recipe.router.get("/:id", (req, res) => {
     .then((doc) => status(200, res, { doc }))
 })
 
-recipe.router.put("/:id/commit", (req, res) => {
+recipe.router.put("/:id/commit", async (req, res) => {
   const recipe_info = parseRecipeText(req.body.text)
-  if (verifyRecipe(res, recipe_info))
-    recipe.model
-      .findOneAndUpdate(
-        { _id: req.params.id, user: req.user },
-        { text: req.body.text, ...recipe_info }
+  if (verifyRecipe(res, recipe_info)) {
+    const doc = await recipe.model.findById(req.params.id).exec()
+    if (queryCheck(res, null, doc)) return
+    const patch = diff.createPatch(
+      `recipe-${doc._id}`,
+      doc.text,
+      req.body.text,
+      doc.date_modified,
+      new Date()
+    )
+    const changes = diff.diffLines(
+      htmlToText(doc.text),
+      htmlToText(req.body.text)
+    )
+    if (changes.length > 1) {
+      doc.history.push({ original: doc.text, message: req.body.message, patch })
+      doc.text = req.body.text
+      return doc.save(
+        (err) =>
+          queryCheck(res, err, doc) ||
+          status(200, res, { doc, message: "SAVED" })
       )
-      .exec(
-        (err, doc) => queryCheck(res, err, doc) || status(200, res, { doc })
-      )
+    }
+    status(200, res, { doc, message: "NO_CHANGES" })
+  }
 })
 
 recipe.router.get("/user/:username", async (req, res) => {
@@ -212,4 +262,10 @@ recipe.router.get("/user/:username", async (req, res) => {
         (err, docs) => queryCheck(res, err, docs) || status(200, res, { docs })
       )
   }
+})
+
+recipe.router.delete("/:id", (req, res) => {
+  recipe.model
+    .findOneAndDelete({ _id: req.params.id, user: req.user._id })
+    .exec((err, doc) => queryCheck(res, err, doc) || status(200, res))
 })

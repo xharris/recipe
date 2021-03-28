@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { block, css, cx } from "style"
 import { useHistory, Link } from "react-router-dom"
-import { edit_recipe } from "util/url"
+import { view_recipe } from "util/url"
 
 const bss = block("recipe_list")
 
@@ -43,7 +43,7 @@ const RecipeList = ({ data }) => {
             >
               <td className={bss("col_title", { col: "fit" })}>
                 <Link
-                  to={edit_recipe(recipe._id)}
+                  to={view_recipe(recipe._id)}
                   className={css({
                     color: "#212121",
                   })}

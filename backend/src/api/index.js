@@ -27,7 +27,7 @@ const { join } = require("path")
 
 const is_dev = process.env.NODE_ENV === "development"
 
-const checkSchema = obj => {
+const checkSchema = (obj) => {
   for (const v in obj) {
     switch (obj[v]) {
       case "shortid":
@@ -50,8 +50,8 @@ const Schema = (obj, options, ...args) => {
       ...options,
       timestamps: {
         createdAt: "date_created",
-        updatedAt: "date_modified"
-      }
+        updatedAt: "date_modified",
+      },
     },
     ...args
   )
@@ -70,7 +70,7 @@ const Schema = (obj, options, ...args) => {
 
 const Model = (name, _schema) => mongoose.model(name, _schema)
 
-const Router = opt => {
+const Router = (opt) => {
   express.Router()
 }
 
@@ -84,11 +84,21 @@ class Api {
     this.router.use((req, res, accept) => {
       if (this.schema) this.createModel()
 
-      const deny = err => status(403, res, { message: err || "BAD_TOKEN" })
+      const deny = (err) => status(403, res, { message: err || "BAD_TOKEN" })
       var needs_auth = []
 
       for (var authtype in this.auth) {
-        if (this.auth[authtype].some(p => req.path.match(p)))
+        if (
+          this.auth[authtype].some((p) => {
+            if (typeof p === "string") return req.path.match(p)
+            else {
+              return (
+                (!req.method || req.method === p.method) &&
+                (!req.path || req.path.match(p.path))
+              )
+            }
+          })
+        )
           needs_auth.push(authtype)
       }
 
@@ -121,7 +131,7 @@ class Api {
 
     this.namespace = backend.io.of(`/${this.name}`)
 
-    this.namespace.on("connection", socket => {
+    this.namespace.on("connection", (socket) => {
       //console.log("connected", this.name, socket.id)
       socket.on("disconnect", () => {
         //console.log("disconnected", this.name, socket.id)
@@ -145,12 +155,12 @@ class Api {
     if (!this._model && this.schema) this._model = Model(this.name, this.schema)
   }
   static get(...names) {
-    return names.map(n => apis[n])
+    return names.map((n) => apis[n])
   }
 }
 
 const backend = {
-  start: options => {
+  start: (options) => {
     const express = require("express")
     const bodyParser = require("body-parser")
     const cors = require("cors")
@@ -171,7 +181,7 @@ const backend = {
         } else {
           callback(new Error("Not allowed by CORS"))
         }
-      }*/
+      }*/,
     }
 
     const helmet = require("helmet") // creates headers to protect from attacks
@@ -189,21 +199,21 @@ const backend = {
             styleSrc: ["'self'", "https://fonts.googleapis.com"],
             fontSrc: ["'self'", "https://fonts.gstatic.com"],
             imgSrc: ["'self'"],
-            baseUri: ["'self'"]
-          }
+            baseUri: ["'self'"],
+          },
         })
       )
     }
     app.use(cors(corsOptions))
     app.use(
       bodyParser.urlencoded({
-        extended: true
+        extended: true,
       })
     )
     app.use(
       bodyParser.json({
         limit: "8mb",
-        extended: true
+        extended: true,
       })
     )
     app.use(morgan("combined")) // tiny/combined
@@ -212,7 +222,7 @@ const backend = {
       fileUpload({
         createParentPath: true,
         safeFileNames: true,
-        preserveExtension: true
+        preserveExtension: true,
       })
     )
 
@@ -229,16 +239,16 @@ const backend = {
       ? {}
       : {
           user: process.env.DB_USER,
-          password: process.env.DB_PASS
+          password: process.env.DB_PASS,
         }
 
     mongoose
       .connect(mongo_url, {
         ...mg_opts,
         useNewUrlParser: true,
-        useUnifiedTopology: true
+        useUnifiedTopology: true,
       })
-      .catch(e => {
+      .catch((e) => {
         console.error("Connection error", e.message)
       })
     mongoose.set("useCreateIndex", true)
@@ -252,7 +262,7 @@ const backend = {
     app.use(express.static(path_build))
     app.get(/^(?!\/api).*/, (req, res) => {
       const path = req.path
-      if ([".js", ".html", ".css"].some(e => path.endsWith(e)))
+      if ([".js", ".html", ".css"].some((e) => path.endsWith(e)))
         res.sendFile(path_build)
       else res.sendFile(join(path_build, "index.html"))
     })
@@ -263,13 +273,13 @@ const backend = {
         readdir(dir, { withFileTypes: true }, (err, files) => {
           if (err) return rej()
           const imports = []
-          files.forEach(f => {
+          files.forEach((f) => {
             if (f.isDirectory() && !no_recursion) requireDir(join(dir, f.name))
             else if (f.isFile() && f.name !== "index.js") {
               imports.push(join(dir, f.name))
             }
           })
-          Promise.all(imports.map(f => require(f)))
+          Promise.all(imports.map((f) => require(f)))
             .then(res)
             .catch(console.error)
         })
@@ -279,14 +289,14 @@ const backend = {
     const server = require("http").Server(app)
     backend.io = require("socket.io")(server, {
       cors: {
-        origin: true
-      }
+        origin: true,
+      },
     })
 
     requireDir(
       join(__dirname, "../routes"),
       options.skip_recursive_require
-    ).then(data => {
+    ).then((data) => {
       server.listen(process.env.PORT || port, () =>
         console.log(`Server running on port ${port}`)
       )
@@ -295,7 +305,7 @@ const backend = {
   cookie: (key, res, ...args) =>
     res
       ? res.cookie(`${backend.options.name}_${key}`, ...args)
-      : `${backend.options.name}_${key}`
+      : `${backend.options.name}_${key}`,
 }
 
 module.exports = {
@@ -305,5 +315,5 @@ module.exports = {
   Model,
   Router,
   backend,
-  express
+  express,
 }

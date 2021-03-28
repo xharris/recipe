@@ -5,17 +5,11 @@
   > div {
     z-index: 100;
   }
-  .MuiList-padding {
-    padding: 0px;
-  }
-  .MenuItem {
-    font-size: $font-size-p;
-    padding: 6px 12px;
-    min-height: 0px;
-    min-width: 70px;
-  }
   &--link {
     text-decoration: none;
     color: rgba(0, 0, 0, 0.87);
+  }
+  &--icon {
+    font-size: 1.5rem;
   }
 }

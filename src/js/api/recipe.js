@@ -17,3 +17,6 @@ export const commit = (id, text) =>
   api.put(`recipe/${id}/commit`, { text }, { withCredentials: true })
 
 export const getUser = (username) => api.get(`recipe/user/${username}`)
+
+export const del = (id) =>
+  api.del(`recipe/${id}`, {}, { withCredentials: true })

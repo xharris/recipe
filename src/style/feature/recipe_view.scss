@@ -1,0 +1,28 @@
+.page_recipe_view {
+  &--body > * {
+    margin-bottom: 15px;
+  }
+
+  &--path {
+    display: flex;
+    align-items: center;
+  }
+
+  &--path > * {
+    margin-right: 5px;
+  }
+
+  &--recipe_header {
+    display: flex;
+    justify-content: space-between;
+    min-height: 28px;
+  }
+
+  &--recipe_header_right {
+    display: flex;
+
+    > *:not(:last-child) {
+      margin-right: 10px;
+    }
+  }
+}

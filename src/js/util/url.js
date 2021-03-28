@@ -2,7 +2,9 @@ const server_url = "localhost:3000"
 
 export const home = () => "/"
 export const edit_recipe = (id) => `/recipe/${id}/edit`
+export const view_recipe = (id) => `/recipe/${id}`
 export const add_recipe = () => `/add/recipe`
+export const recipe_history = (id) => `/recipe/${id}/history`
 
 export const profile = (username) => `/profile/${username}`
 export const profile_recipes = (username) => `/profile/${username}/recipes`

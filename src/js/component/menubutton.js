@@ -7,6 +7,8 @@ import Paper from "@material-ui/core/Paper"
 import Popper from "@material-ui/core/Popper"
 import MenuItem from "@material-ui/core/MenuItem"
 import MenuList from "@material-ui/core/MenuList"
+import ListItemIcon from "@material-ui/core/ListItemIcon"
+import ListItemText from "@material-ui/core/ListItemText"
 import Button from "component/button"
 import { useHistory, Link } from "react-router-dom"
 import { block, cx } from "style"
@@ -27,15 +29,15 @@ const MenuButton = ({
   const el_button = useRef()
   const prevOpen = useRef(open)
   const handleToggle = () => {
-    setOpen(prev => !prev)
+    setOpen((prev) => !prev)
   }
-  const handleClose = e => {
+  const handleClose = (e) => {
     if (el_button.current && !el_button.current.contains(e.target)) {
       setOpen(false)
       el_button.current.blur()
     }
   }
-  const handleListKeyDown = e => {
+  const handleListKeyDown = (e) => {
     if (e.key === "Tab") {
       e.preventDefault()
       setOpen(false)
@@ -63,7 +65,7 @@ const MenuButton = ({
             {...TransitionProps}
             style={{
               transformOrigin:
-                placement === "bottom" ? "left top" : "left bottom"
+                placement === "bottom" ? "left top" : "left bottom",
             }}
           >
             <Paper>
@@ -74,14 +76,19 @@ const MenuButton = ({
                       key={i}
                       classes={{ root: "MenuItem" }}
                       {...item}
-                      onClick={e => {
+                      onClick={(e) => {
                         item.onClick && item.onClick(e, item)
                         if (closeOnSelect) handleClose(e)
                       }}
                       component={item.to && "a"}
                       href={item.to}
                     >
-                      {item.label}
+                      {item.icon && (
+                        <ListItemIcon>
+                          <Icon className={bss("icon")} icon={item.icon} />
+                        </ListItemIcon>
+                      )}
+                      <ListItemText primary={item.label} />
                     </MenuItem>
                   ))}
                 </MenuList>

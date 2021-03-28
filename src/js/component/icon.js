@@ -5,7 +5,7 @@ import { cx, block } from "style"
 const bss = block("icon")
 
 export const Icon = ({ icon, className, label, ...props }) => {
-  const FinalIcon = Icons[icon]
+  const FinalIcon = Icons[icon] || Icons["HelpOutline"]
   return (
     <div className={cx(bss(), className)}>
       {label != null && <div className={bss("label")}>{label}</div>}
