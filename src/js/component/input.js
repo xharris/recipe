@@ -1,6 +1,7 @@
 import React, { useState, useRef, forwardRef, useCallback } from "react"
 import Tooltip from "@material-ui/core/Tooltip"
 import Button from "component/button"
+import Text from "component/text"
 import { useCombinedRef } from "util"
 import { useThemeContext } from "feature/theme"
 import { cx, css, block, lightenDarken } from "style"
@@ -25,6 +26,7 @@ const Input = forwardRef(
       dirty,
       width,
       noWrap,
+      label,
       ...props
     },
     ref
@@ -35,7 +37,7 @@ const Input = forwardRef(
     const [focused, setFocused] = useState()
 
     const submit = useCallback(
-      e => {
+      (e) => {
         if (comboref && comboref.current && onSubmit)
           onSubmit(comboref.current.value)
         e.stopPropagation()
@@ -60,7 +62,7 @@ const Input = forwardRef(
               backgroundColor: getColor(color, bg, -15),
               minHeight: size === "small" ? 21 : 32,
               ":hover, :focus": !disabled && {
-                border: `1px solid ${getColor(color, bg)}`
+                border: `1px solid ${getColor(color, bg)}`,
               },
               boxShadow:
                 !disabled &&
@@ -72,10 +74,10 @@ const Input = forwardRef(
                 `1px solid ${getColor(color, bg)}`,
               width: width,
               flexWrap:
-                children && children.length > 0 && !noWrap ? "wrap" : "nowrap"
+                children && children.length > 0 && !noWrap ? "wrap" : "nowrap",
             })
           )}
-          onClick={e => {
+          onClick={(e) => {
             // console.log("here")
             if (
               comboref &&
@@ -88,6 +90,7 @@ const Input = forwardRef(
           }}
         >
           {children}
+          {label && <Text className={bss("label")}>{label}</Text>}
           {showinput !== false && (
             <input
               ref={comboref}
@@ -95,15 +98,15 @@ const Input = forwardRef(
                 bss("input"),
                 css({
                   "::placeholder": {
-                    color: getColor(color, color)
+                    color: getColor(color, color),
                   },
                   flexBasis: width,
-                  height: size === "small" ? 13 : 24
+                  height: size === "small" ? 13 : 24,
                 })
               )}
               onFocus={() => setFocused(true)}
               onBlur={() => setFocused(false)}
-              onKeyDown={e => onSubmit && e.key === "Enter" && submit(e)}
+              onKeyDown={(e) => onSubmit && e.key === "Enter" && submit(e)}
               disabled={disabled}
               {...props}
             />
@@ -114,7 +117,7 @@ const Input = forwardRef(
               title="clear"
               className={css({
                 marginLeft: 3,
-                cursor: "pointer"
+                cursor: "pointer",
               })}
               onClick={onClear}
               tabIndex={2}
@@ -126,7 +129,7 @@ const Input = forwardRef(
               title="submit"
               className={css({
                 marginLeft: 3,
-                cursor: "pointer"
+                cursor: "pointer",
               })}
               onClick={submit}
               tabIndex={2}

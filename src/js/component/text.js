@@ -15,13 +15,13 @@ const Text = ({
   ...props
 }) => {
   const { theme, getColor } = useThemeContext()
-  const Container = props => createElement(component, props)
+  const Container = (props) => createElement(component, props)
   return (
     <Container
       className={cx(
         bss(),
         css({
-          color: themed && getColor(color, bg, amt)
+          color: themed && getColor(color, bg, amt),
         }),
         className
       )}

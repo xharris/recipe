@@ -11,7 +11,7 @@ const Markdown = ({ content, size, preview, className }) => {
 
   const renderers = useMemo(
     () => ({
-      text: props => {
+      text: (props) => {
         // console.log("text", props)
         return (
           <Link
@@ -38,7 +38,7 @@ const Markdown = ({ content, size, preview, className }) => {
           />
         )
       },
-      link: props => {
+      link: (props) => {
         // console.log("link", props)
         return (
           <Link
@@ -50,7 +50,7 @@ const Markdown = ({ content, size, preview, className }) => {
             {...props}
           />
         )
-      }
+      },
     }),
     [preview]
   )
@@ -61,21 +61,25 @@ const Markdown = ({ content, size, preview, className }) => {
         bss({ size: size || "full" }),
         css({
           "&, & > *": {
-            color: pickFontColor(theme.secondary, theme.secondary, 65)
+            color: pickFontColor(theme.secondary, theme.secondary, 65),
           },
           "& h1": {
             color: pickFontColor(theme.secondary, theme.secondary, 60),
-            backgroundColor: pickFontColor(theme.secondary, theme.secondary, 20)
+            backgroundColor: pickFontColor(
+              theme.secondary,
+              theme.secondary,
+              20
+            ),
           },
           "& a, & .link": {
             color: lightenDarken(theme.primary, -30),
-            textShadow: `0px 0px 1px ${lightenDarken(theme.primary, -30)}`
-          }
+            textShadow: `0px 0px 1px ${lightenDarken(theme.primary, -30)}`,
+          },
         }),
         className
       )}
       // plugins={[gfm]}
-      renderers={renderers}
+      // renderers={renderers}
     >
       {content.replace(/(?:\r\n|\r|\n)/gi, "\n\n")}
     </ReactMarkdown>

@@ -12,7 +12,7 @@ const Page = ({ className, children, title, theme, ...props }) => {
       className={cx(
         bss(),
         css({
-          backgroundColor: theme && theme.primary
+          backgroundColor: theme && theme.primary,
         }),
         className
       )}

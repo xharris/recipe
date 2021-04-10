@@ -11,7 +11,7 @@ import * as url from "util/url"
 const bss = block("header")
 
 const Header = () => {
-  const { user } = useAuthContext()
+  const { user, signOut } = useAuthContext()
   const [showSettings, setShowSettings] = useState()
   const [showLogin, setShowLogin] = useState()
   const color = "secondary"
@@ -51,6 +51,10 @@ const Header = () => {
                   {
                     label: "Settings",
                     onClick: () => setShowSettings(true),
+                  },
+                  {
+                    label: "Sign out",
+                    onClick: () => signOut(),
                   },
                 ]}
                 closeOnSelect

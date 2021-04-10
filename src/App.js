@@ -8,6 +8,7 @@ import PageHome from "feature/page/home"
 import PageRecipeAdd from "feature/page/recipe_add"
 import PageRecipeView from "feature/page/recipe_view"
 import PageProfile from "feature/page/profile"
+import * as url from "util/url"
 import "style/index.scss"
 
 /**TODO
@@ -23,23 +24,23 @@ const App = () => {
             <SettingsProvider>
               <ThemeProvider>
                 <Switch>
-                  <Route path="/" exact>
+                  <Route path={url.home()} exact>
                     <PageHome />
                   </Route>
-                  <Route path="/add/recipe" exact>
+                  <Route path={url.add_recipe()}>
                     <PageRecipeAdd />
                   </Route>
                   <Route
                     path={[
-                      "/recipe/:id/edit",
-                      "/recipe/:id",
-                      "/recipe/:id/history/:page?",
+                      url.edit_recipe(),
+                      url.view_recipe(),
+                      url.recipe_history(),
                     ]}
                     exact
                   >
                     <PageRecipeView />
                   </Route>
-                  <Route path="/profile/:username">
+                  <Route path={url.profile()}>
                     <PageProfile />
                   </Route>
                 </Switch>

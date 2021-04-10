@@ -5,21 +5,32 @@
 
   &--path {
     display: flex;
+    flex-direction: column;
+  }
+
+  &--row {
+    display: flex;
     align-items: center;
   }
 
-  &--path > * {
+  &--row > * {
     margin-right: 5px;
+  }
+
+  &--fork {
+    margin-top: 10px;
   }
 
   &--recipe_header {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     min-height: 28px;
   }
 
   &--recipe_header_right {
     display: flex;
+    align-items: center;
 
     > *:not(:last-child) {
       margin-right: 10px;

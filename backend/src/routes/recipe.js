@@ -16,8 +16,7 @@ const history = Schema(
       type: String,
       get: function () {
         const patch = diff.parsePatch(this.patch)
-        console.log("CHANGE", this.date_created)
-        patch.forEach((p) => console.log(p.hunks))
+        // patch.forEach((p) => console.log(p.hunks))
         // diff.diffChars(
         //   htmlToText(doc.text),
         //   htmlToText(req.body.text)
@@ -61,6 +60,7 @@ const recipe = new Api(
     tags: [String],
     ingredients: [ingredient],
     history: [history],
+    forked_from: ref("recipe"),
   },
   {
     toJSON: { getters: true },
@@ -199,6 +199,7 @@ recipe.auth.any = [
   "/create",
   "/:id/commit", // /\/(\w+)\/commit/,
   { method: "DELETE", path: /\/(\w+)/ },
+  "/:id/fork",
 ]
 
 recipe.router.post("/create", (req, res) => {
@@ -210,13 +211,17 @@ recipe.router.post("/create", (req, res) => {
 })
 
 recipe.router.get("/all", (req, res) => {
-  recipe.model.find().then((docs) => status(200, res, { docs }))
+  recipe.model
+    .find()
+    .populate("user")
+    .then((docs) => status(200, res, { docs }))
 })
 
 recipe.router.get("/:id", (req, res) => {
   recipe.model
     .findById(req.params.id)
     .populate("user")
+    .populate({ path: "forked_from", populate: { path: "user" } })
     .then((doc) => status(200, res, { doc }))
 })
 
@@ -239,6 +244,9 @@ recipe.router.put("/:id/commit", async (req, res) => {
     if (changes.length > 1) {
       doc.history.push({ original: doc.text, message: req.body.message, patch })
       doc.text = req.body.text
+      for (const key in recipe_info) {
+        doc[key] = recipe_info[key]
+      }
       return doc.save(
         (err) =>
           queryCheck(res, err, doc) ||
@@ -255,7 +263,6 @@ recipe.router.get("/user/:username", async (req, res) => {
     .findOne({ username: req.params.username })
     .exec()
   if (!queryCheck(res, `User ${req.params.username} not found`, doc_user)) {
-    console.log(doc_user)
     recipe.model
       .find({ user: doc_user })
       .exec(
@@ -269,3 +276,20 @@ recipe.router.delete("/:id", (req, res) => {
     .findOneAndDelete({ _id: req.params.id, user: req.user._id })
     .exec((err, doc) => queryCheck(res, err, doc) || status(200, res))
 })
+
+recipe.router.post("/:id/fork", async (req, res) => {
+  const doc = await recipe.model.findById(req.params.id).populate("user")
+  if (queryCheck(res, "NOT_FOUND", doc)) return
+  if (req.user.id === doc.user._id) return status(400, res, "SAME_USER")
+  const new_recipe = parseRecipeText(doc.text)
+  recipe.model
+    .create({
+      text: doc.text,
+      user: req.user,
+      forked_from: doc._id,
+      ...new_recipe,
+    })
+    .then((doc) => status(200, res, { doc }))
+})
+
+module.exports = { recipe }

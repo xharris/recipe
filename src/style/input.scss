@@ -5,10 +5,11 @@
   background: #eeeeee;
   box-shadow: 0px 0px 3px 0px transparent;
   border-radius: 3px;
-  padding: 3px;
+  padding: 3px 9px;
   box-sizing: border-box;
   display: inline-flex;
   align-items: center;
+  border-bottom: 1px solid #bdbdbd;
 
   transition: all ease-in-out 0.2s;
 
@@ -37,8 +38,11 @@
     outline: 0px;
     border: 0px;
     background: transparent;
-    font-family: Arial;
     box-sizing: border-box;
     padding: 0px;
+  }
+
+  &--label {
+    margin-right: 9px;
   }
 }

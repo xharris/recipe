@@ -73,7 +73,7 @@ const MenuButton = ({
                 <MenuList autoFocusItem={open} onKeyDown={handleListKeyDown}>
                   {items.map((item, i) => (
                     <MenuItem
-                      key={i}
+                      key={item.key || i}
                       classes={{ root: "MenuItem" }}
                       {...item}
                       onClick={(e) => {

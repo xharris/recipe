@@ -20,7 +20,7 @@ const Avatar = ({ size = "small", user, theme: _theme, preview, nolink }) => {
 
   const Container = ({ ...props }) =>
     !nolink ? (
-      <Link to={user && !preview && url.user(username)} {...props} />
+      <Link to={user && !preview && url.profile(username)} {...props} />
     ) : (
       <div {...props} />
     )

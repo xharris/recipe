@@ -1,5 +1,5 @@
 import React, { useState, forwardRef } from "react"
-import { Link, useRouteMatch } from "react-router-dom"
+import { Link, useRouteMatch, useHistory } from "react-router-dom"
 import Popover from "@material-ui/core/Popover"
 import { useThemeContext } from "feature/theme"
 import Tooltip from "@material-ui/core/Tooltip"
@@ -32,6 +32,7 @@ const Button = forwardRef(
       bg = "secondary", // the background of the element the button will appear in (not the button's background color)
       color = "primary",
       amt = 20,
+      backTo, // will go back in history if clicked and the user is already on the page
       ...props
     },
     ref
@@ -39,7 +40,8 @@ const Button = forwardRef(
     const { getColor } = useThemeContext()
     const [anchor, setAnchor] = useState()
     const match = useRouteMatch(to)
-    const outlined = !!(_outlined || match)
+    const history = useHistory()
+    const outlined = !!(_outlined || (to && match))
     const Content = () => (
       <>
         {icon && iconPlacement !== "right" && <Icon icon={icon} />}
@@ -86,7 +88,7 @@ const Button = forwardRef(
         <Link
           className={cx(bss({ type, size }), style, className)}
           ref={ref}
-          to={to}
+          to={match && backTo ? backTo : to}
           disabled={disabled}
           {...props}
         >
@@ -95,14 +97,7 @@ const Button = forwardRef(
       </Tooltip>
     ) : (
       [
-        <Tooltip
-          key="tooltip"
-          title={title || ""}
-          disableFocusListener={!title}
-          disableHoverListener={!title}
-          disableTouchListener={!title}
-          placement="top"
-        >
+        <Tooltip key="tooltip" title={title || ""} placement="top">
           <button
             ref={ref}
             key="button"

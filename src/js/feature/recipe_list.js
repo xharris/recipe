@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react"
 import { block, css, cx } from "style"
 import { useHistory, Link } from "react-router-dom"
+import Button from "component/button"
 import { view_recipe } from "util/url"
 
 const bss = block("recipe_list")
 
-const RecipeList = ({ data }) => {
+const RecipeList = ({ data, hideDisplayName, onRemove }) => {
   const history = useHistory()
 
   const formatTime = (min, max) => {
@@ -29,37 +30,37 @@ const RecipeList = ({ data }) => {
   }
 
   return (
-    <table className={cx(bss(), css({ fontSize: "0.9rem" }))}>
-      <tbody>
+    <div className={bss()}>
+      <div>
         {data &&
           data.map((recipe) => (
-            <tr
-              key={recipe._id}
-              className={css({
-                "&:hover": {
-                  outline: "1px solid #BDBDBD",
-                },
-              })}
-            >
-              <td className={bss("col_title", { col: "fit" })}>
+            <div key={recipe._id} className={bss("recipe")}>
+              <div className={bss("title")}>
                 <Link
                   to={view_recipe(recipe._id)}
                   className={css({
                     color: "#212121",
                   })}
                 >
-                  {recipe.title}
+                  {hideDisplayName
+                    ? recipe.title
+                    : `${recipe.user.display_name} / ${recipe.title}`}
                 </Link>
-              </td>
-              <td className={bss("col_desc")}>{recipe.short_description}</td>
-              <td className={bss({ col: "fit" })}>{`(${formatTime(
+              </div>
+              <div className={bss("desc")}>{recipe.short_description}</div>
+              <div className={bss("time")}>{`(${formatTime(
                 recipe.min_time,
                 recipe.max_time
-              )})`}</td>
-            </tr>
+              )})`}</div>
+              {onRemove && (
+                <div className={bss("remove")}>
+                  <Button icon="Close" onClick={() => onRemove(recipe._id)} />
+                </div>
+              )}
+            </div>
           ))}
-      </tbody>
-    </table>
+      </div>
+    </div>
   )
 }
 

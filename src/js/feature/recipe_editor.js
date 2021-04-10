@@ -5,9 +5,9 @@ import Body from "feature/body"
 import Editable from "component/editable"
 import Button from "component/button"
 import Text from "component/text"
-import { Editor, EditorState, convertToRaw } from "draft-js"
+import { Editor, EditorState, convertToRaw, ContentState } from "draft-js"
 import "draft-js/dist/Draft.css"
-import { create } from "api/recipe"
+import { create, commit, useGet } from "api/recipe"
 import { view_recipe } from "util/url"
 
 const bss = block("recipe_editor")
@@ -16,7 +16,9 @@ const RecipeEditor = ({ id }) => {
   const [text, setText] = useState()
   const [error, setError] = useState()
   const [editor, setEditor] = useState(() => EditorState.createEmpty())
+  const [focused, setFocused] = useState()
   const history = useHistory()
+  const [recipe, fetchRecipe] = useGet()
 
   const getValue = useCallback(
     () =>
@@ -26,22 +28,41 @@ const RecipeEditor = ({ id }) => {
     [editor]
   )
 
+  const setValue = useCallback(
+    (v) => setEditor(EditorState.push(editor, ContentState.createFromText(v))),
+    []
+  )
+
+  useEffect(() => {
+    if (recipe) setValue(recipe.text)
+  }, [recipe])
+
+  useEffect(() => {
+    let call
+    if (id) call = fetchRecipe(id)
+    return () => {
+      if (call) call.cancel()
+    }
+  }, [id])
+
   return (
-    <div className={bss()}>
+    <div className={bss({ focused })}>
       <Editor
         className={bss("editor")}
         editorState={editor}
         onChange={setEditor}
+        onFocus={() => setFocused(true)}
+        onBlur={() => setFocused(false)}
       />
       {error && <Text>{error}</Text>}
       <Button
-        label="Add"
+        className={bss("save")}
+        label={id ? "Save" : "Add"}
         onClick={() => {
-          console.log("here")
           setError()
           if (id) {
+            commit(id, getValue()).catch((e) => setError(e.response.data))
           } else {
-            console.log("ok go")
             create({ text: getValue() })
               .then((res) => history.push(view_recipe(res.data.doc._id)))
               .catch((e) => setError(e.response.data))

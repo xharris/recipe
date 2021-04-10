@@ -9,7 +9,7 @@ export const useGetAll = () =>
   useApi("recipe/all", () => api.get("recipe/all").then((res) => res.data.docs))
 
 export const useGet = () =>
-  useApi("recipe/all", (id) =>
+  useApi("recipe/:id", (id) =>
     api.get(`recipe/${id}`).then((res) => res.data.doc)
   )
 
@@ -20,3 +20,6 @@ export const getUser = (username) => api.get(`recipe/user/${username}`)
 
 export const del = (id) =>
   api.del(`recipe/${id}`, {}, { withCredentials: true })
+
+export const fork = (id) =>
+  api.post(`recipe/${id}/fork`, {}, { withCredentials: true })

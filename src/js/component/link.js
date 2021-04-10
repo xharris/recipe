@@ -25,7 +25,7 @@ const Link = ({
   children,
   bg = "secondary",
   color = "primary",
-  amt = 20
+  amt = 20,
 }) => {
   const { getColor } = useThemeContext()
   const [metadata, setMetadata] = useState()
@@ -37,7 +37,7 @@ const Link = ({
   useEffect(() => {
     let cancel = false
     if (type && lastHref !== _href) {
-      console.log(type, _href)
+      // console.log(type, _href)
       if (type === "link") {
         const cached_res = preview
           ? preview_scrape_cache[_href]
@@ -48,7 +48,7 @@ const Link = ({
         } else {
           apiUtil
             .scrape(_href, { preview })
-            .then(res => {
+            .then((res) => {
               if (!cancel) {
                 setData(res.data)
                 setMetadata(res.data.data)
@@ -63,8 +63,8 @@ const Link = ({
         }
       } else if (type === "video" && re_api_video.test(_href)) {
         fetch(_href)
-          .then(res => res.blob())
-          .then(blob => {
+          .then((res) => res.blob())
+          .then((blob) => {
             if (!cancel) setHref(URL.createObjectURL(blob))
           })
       } else {
@@ -89,7 +89,7 @@ const Link = ({
       const mimetype = lookup(_href)
       const isurl = re_url.test(_href)
 
-      console.log("isurl", isurl, _href)
+      // console.log("isurl", isurl, _href)
 
       if (re_api_image.test(_href)) {
         setType("image")
@@ -107,7 +107,7 @@ const Link = ({
       className={cx(
         bss({ loading: true }),
         css({
-          backgroundColor: getColor("secondary", "secondary")
+          backgroundColor: getColor("secondary", "secondary"),
         })
       )}
     />
@@ -122,7 +122,7 @@ const Link = ({
             `url(${metadata.thumbnail_url})`,
           width: metadata.width,
           height: metadata.height,
-          maxHeight: preview && 150
+          maxHeight: preview && 150,
         }),
         className
       )}
@@ -147,7 +147,7 @@ const Link = ({
               el_src.src = node.attribs.src
               parent.appendChild(el_src)
             }
-          }
+          },
         })
       ) : null}
     </div>
@@ -165,7 +165,7 @@ const Link = ({
       className={cx(
         bss(),
         css({
-          color: getColor(color, bg, amt)
+          color: getColor(color, bg, amt),
         }),
         className
       )}
