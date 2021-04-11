@@ -17,11 +17,10 @@ const history = Schema(
       get: function () {
         const patch = diff.parsePatch(this.patch)
         // patch.forEach((p) => console.log(p.hunks))
-        // diff.diffChars(
-        //   htmlToText(doc.text),
-        //   htmlToText(req.body.text)
+        // console.log(
+        //   diff.diffChars(htmlToText(doc.text), htmlToText(doc.original))
         // )
-        return this.patch
+        return patch
       },
     },
   },

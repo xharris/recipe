@@ -9909,6 +9909,13 @@ fsevents@^1.2.7:
   languageName: node
   linkType: hard
 
+"include-media@npm:^1.4.9":
+  version: 1.4.9
+  resolution: "include-media@npm:1.4.9"
+  checksum: 8ea1aa43f80dd43a7b2d199887cca5129643790cd99bf8b2aeccd16ad38c637ef5f9779ae747645032a2b67cc056f0ea94b9aa9d48ccd493b0b7b11f5985b45b
+  languageName: node
+  linkType: hard
+
 "indefinite-observable@npm:^2.0.1":
   version: 2.0.1
   resolution: "indefinite-observable@npm:2.0.1"
@@ -17851,6 +17858,7 @@ resolve@1.18.1:
     express-fileupload: ^1.2.0
     fs-extra: ^9.0.1
     helmet: ^3.21.1
+    include-media: ^1.4.9
     js-cookie: ^2.2.1
     js-cookies: ^1.0.4
     jsonwebtoken: ^8.5.1

@@ -25,51 +25,23 @@ const Avatar = ({ size = "small", user, theme: _theme, preview, nolink }) => {
       <div {...props} />
     )
 
-  const Square = () =>
-    avatar == null ? (
-      <Container
-        className={cx(
-          bss("square"),
-          css({
-            color: pickFontColor(theme.primary),
-            borderColor: pickFontColor(theme.primary, theme.primary, 20),
-            backgroundColor: theme.primary,
-          })
-        )}
-      >
-        {display_name.toUpperCase().slice(0, 2)}
-      </Container>
-    ) : (
-      <Container className={cx(bss("image"))}>
-        <img src={avatar} />
-      </Container>
-    )
-
   useEffect(() => {
     if (size === "full" && username) fetch(username)
   }, [size, username])
 
-  return size === "full" ? (
-    <Box className={bss({ size })} color={theme.primary}>
-      {/*<Square />
-      {user.display_name}
-      {auth_user && auth_user.username !== username ? (
-        <Button
-          className={css({
-            height: 40
-          })}
-          label={following ? "Unfollow" : "Follow"}
-          onClick={() => updateFollowing(username)}
-          outlined
-        />
+  return (
+    <Container
+      className={bss({ size, type: avatar ? "image" : "text" })}
+      title={display_name}
+    >
+      {avatar == null ? (
+        <div className={bss("text")}>
+          {display_name.toUpperCase().slice(0, 2)}
+        </div>
       ) : (
-        <div className={css({ width: 50 })} />
-      )}*/}
-    </Box>
-  ) : (
-    <div className={bss({ size })} title={display_name}>
-      <Square />
-    </div>
+        <img className={bss("image")} src={avatar} />
+      )}
+    </Container>
   )
 }
 

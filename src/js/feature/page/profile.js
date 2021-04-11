@@ -14,6 +14,7 @@ import RecipeList from "feature/recipe_list"
 import Button from "component/button"
 import Avatar from "feature/avatar"
 import ListView from "feature/list_view"
+import Text from "component/text"
 import { getUser } from "api/recipe"
 import { useAuthContext } from "component/auth"
 import * as apiUser from "api/user"
@@ -59,7 +60,7 @@ const PageProfile = () => {
       <Body className={bss("body")}>
         <div className={bss("left")}>
           {user && <Avatar user={user} size="large" />}
-          {username}
+          <Text className={bss("username")}>{username}</Text>
         </div>
         <div className={bss("right")}>
           <div className={bss("subpages")}>
@@ -90,22 +91,22 @@ const PageProfile = () => {
             ) : (
               [
                 <div key="lists" className={bss("lists")}>
-                  {lists && lists.length > 0
-                    ? lists.map((list) => (
-                        <Button
-                          key={list._id}
-                          className={bss("list")}
-                          label={list.name}
-                          to={url.view_list(list._id)}
-                          outlined
-                        />
-                      ))
-                    : "no lists yet..."}
+                  {lists &&
+                    lists.map((list) => (
+                      <Button
+                        key={list._id}
+                        className={bss("list")}
+                        label={list.name}
+                        to={url.view_list(list._id)}
+                        outlined
+                      />
+                    ))}
                 </div>,
                 authUser && user && authUser._id === user._id && (
                   <Button
                     key="add"
                     icon="Add"
+                    label="Add list"
                     onClick={() =>
                       apiList.create().then(() => fetchLists(user._id))
                     }

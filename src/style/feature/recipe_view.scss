@@ -25,7 +25,6 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    min-height: 28px;
   }
 
   &--recipe_header_right {
@@ -35,5 +34,34 @@
     > *:not(:last-child) {
       margin-right: 10px;
     }
+  }
+
+  &--change {
+    padding: 20px 0px;
+    margin: 0px;
+  }
+
+  &--change:first-child {
+    padding-top: 0px;
+  }
+
+  &--diff_hunk {
+    background-color: #eee;
+    border-radius: 2px;
+    padding: 2px 0px;
+  }
+
+  &--diff_line {
+    padding: 0px 5px;
+  }
+
+  &--type-remove {
+    background-color: #ffcdd2;
+    color: #b71c1c;
+  }
+
+  &--type-add {
+    background-color: #c8e6c9;
+    color: #1b5e20;
   }
 }

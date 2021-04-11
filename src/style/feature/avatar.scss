@@ -1,81 +1,41 @@
 .avatar {
-  &--square,
-  &--image {
-    border-radius: 4px;
-    margin-right: 1px;
-    margin-bottom: 1px;
+  text-decoration: none;
+
+  &--type-image {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    box-sizing: border-box;
-    text-decoration: none;
-    border-style: solid;
-
-    width: 100%;
-    height: auto;
-    flex: 0 0 42px;
   }
 
-  img {
-    width: 100%;
+  &--type-text {
+    font-size: 4vw;
   }
 
-  image {
-    width: 100%;
-    height: 100%;
+  @include media(">desktop") {
+    &--type-text {
+      font-size: 3rem;
+    }
   }
 
-  &--size-full {
-    align-items: center;
-  }
-
-  &--size-small,
-  &--size-small {
-    width: 25px;
-    height: 25px;
-    flex: 0 0 25px;
-    border-width: 1px;
-    font-size: 0.7rem;
-  }
-
-  &--size-medium,
-  &--size-small {
-    width: 40px;
-    height: 40px;
-    flex: 0 0 40px;
-    font-size: 0.8rem;
-  }
-
-  &--size-large,
-  &--size-small {
-    width: 100%;
-    height: 100%;
-    flex: 0 0 100%;
-    font-size: 1rem;
-  }
-
-  &--size-full {
-    width: 40px;
-    height: 40px;
-    flex: 0 0 40px;
-    font-size: 0.8rem;
-  }
-
-  &--square {
-    font-size: inherit;
-    font-weight: 400;
-    user-select: none;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(255, 255, 255, 0.35);
+  &--image,
+  &--text {
+    border-radius: 5px; // 100%;
+    box-shadow: 1px 1px #424242, 2px 2px #424242;
   }
 
   &--image {
-    background-size: cover;
-    background-position: center;
+    width: 100%;
+  }
+
+  &--text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0;
+    color: #424242;
+  }
+
+  &--text:after {
+    content: "";
+    display: block;
+    padding-bottom: 100%;
   }
 }

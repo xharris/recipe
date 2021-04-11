@@ -7,6 +7,13 @@ $path: "./proggy/ProggyVector/ProggyVector Regular";
     url("#{$path}.ttf") format("truetype");
 }
 
+$breakpoints: (
+  phone: 640px,
+  tablet: 768px,
+  desktop: 1024px,
+) !default;
+
+@import "_include-media.scss";
 @import "variables.scss";
 
 @import "app.scss";

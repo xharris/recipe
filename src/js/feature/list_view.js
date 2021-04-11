@@ -71,7 +71,7 @@ const ListView = ({ id, onBack }) => {
             }
           />
         ) : (
-          <Text>{"No recipes yet"}</Text>
+          <Text className={bss("no_recipes")}>{"No recipes yet"}</Text>
         )}
       </div>
     </div>

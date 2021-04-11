@@ -31,35 +31,33 @@ const RecipeList = ({ data, hideDisplayName, onRemove }) => {
 
   return (
     <div className={bss()}>
-      <div>
-        {data &&
-          data.map((recipe) => (
-            <div key={recipe._id} className={bss("recipe")}>
-              <div className={bss("title")}>
-                <Link
-                  to={view_recipe(recipe._id)}
-                  className={css({
-                    color: "#212121",
-                  })}
-                >
-                  {hideDisplayName
-                    ? recipe.title
-                    : `${recipe.user.display_name} / ${recipe.title}`}
-                </Link>
-              </div>
-              <div className={bss("desc")}>{recipe.short_description}</div>
-              <div className={bss("time")}>{`(${formatTime(
-                recipe.min_time,
-                recipe.max_time
-              )})`}</div>
-              {onRemove && (
-                <div className={bss("remove")}>
-                  <Button icon="Close" onClick={() => onRemove(recipe._id)} />
-                </div>
-              )}
+      {data &&
+        data.map((recipe) => (
+          <div key={recipe._id} className={bss("recipe")}>
+            <div className={bss("title")}>
+              <Link
+                to={view_recipe(recipe._id)}
+                className={css({
+                  color: "#212121",
+                })}
+              >
+                {hideDisplayName
+                  ? recipe.title
+                  : `${recipe.user.display_name} / ${recipe.title}`}
+              </Link>
             </div>
-          ))}
-      </div>
+            <div className={bss("desc")}>{recipe.short_description}</div>
+            <div className={bss("time")}>{`(${formatTime(
+              recipe.min_time,
+              recipe.max_time
+            )})`}</div>
+            {onRemove && (
+              <div className={bss("remove")}>
+                <Button icon="Close" onClick={() => onRemove(recipe._id)} />
+              </div>
+            )}
+          </div>
+        ))}
     </div>
   )
 }
