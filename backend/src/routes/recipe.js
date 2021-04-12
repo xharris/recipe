@@ -220,6 +220,7 @@ recipe.router.get("/:id", (req, res) => {
   recipe.model
     .findById(req.params.id)
     .populate("user")
+    .populate("forked_from")
     .populate({ path: "forked_from", populate: { path: "user" } })
     .then((doc) => status(200, res, { doc }))
 })

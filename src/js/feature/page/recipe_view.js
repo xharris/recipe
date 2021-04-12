@@ -46,58 +46,68 @@ const PageRecipeEdit = () => {
   const TextView = () => <Markdown content={recipe.text} />
 
   const linetypes = ["same", "add", "remove"]
-  const HistoryView = () => (
-    <div className={bss("history")}>
-      <Text>{"color key:"}</Text>
-      <Text
-        className={bss("diff_line", {
-          type: linetypes[1],
-        })}
-      >
-        {"line was added"}
-      </Text>
-      <Text
-        className={bss("diff_line", {
-          type: linetypes[2],
-        })}
-      >
-        {"line was removed"}
-      </Text>
-      {recipe.history.map((h) => {
-        const date = new Date(h.date_created)
-        return (
-          <div key={h._id} className={bss("change")}>
-            <div className={bss("change_header")}>
-              <Text>{h.message}</Text>
-              <Text>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`}</Text>
-            </div>
-            <div className={bss("change_diff")}>
-              {h.patch_readable[0].hunks.map((hunk, h) => (
-                <div className={bss("diff_hunk")} key={h}>
-                  {hunk.lines.map((line, l) => {
-                    const start = line.substring(0, 1)
-                    const linetype = start === " " ? 0 : start === "+" ? 1 : 2 // 0 - none, 1 - add, 2 - remove
-                    const newline = line.substring(1)
+  const HistoryView = () => {
+    const date_created = new Date(recipe.date_created)
+    return (
+      <div className={bss("history")}>
+        <Text>{"color key:"}</Text>
+        <Text
+          className={bss("diff_line", {
+            type: linetypes[1],
+          })}
+        >
+          {"line was added"}
+        </Text>
+        <Text
+          className={bss("diff_line", {
+            type: linetypes[2],
+          })}
+        >
+          {"line was removed"}
+        </Text>
+        {recipe.history.map((h) => {
+          const date = new Date(h.date_created)
+          return (
+            <div key={h._id} className={bss("change")}>
+              <div className={bss("change_header")}>
+                <Text>{`${date.toLocaleDateString()} - ${date.toLocaleTimeString()}`}</Text>
+                <Text>{h.message}</Text>
+              </div>
+              <div className={bss("change_diff")}>
+                {h.patch_readable[0].hunks.map((hunk, h) => (
+                  <div className={bss("diff_hunk")} key={h}>
+                    {hunk.lines.map((line, l) => {
+                      const start = line.substring(0, 1)
+                      const linetype = start === " " ? 0 : start === "+" ? 1 : 2 // 0 - none, 1 - add, 2 - remove
+                      const newline = line.substring(1)
 
-                    return (
-                      <Text
-                        key={l}
-                        className={bss("diff_line", {
-                          type: linetypes[linetype],
-                        })}
-                      >
-                        {newline.length === 0 ? "\u00a0" : newline}
-                      </Text>
-                    )
-                  })}
-                </div>
-              ))}
+                      return (
+                        <Text
+                          key={l}
+                          className={bss("diff_line", {
+                            type: linetypes[linetype],
+                          })}
+                        >
+                          {newline.length === 0 ? "\u00a0" : newline}
+                        </Text>
+                      )
+                    })}
+                  </div>
+                ))}
+              </div>
             </div>
+          )
+        })}
+
+        <div className={bss("change")}>
+          <div className={bss("change_header")}>
+            <Text>{`${date_created.toLocaleDateString()} - ${date_created.toLocaleTimeString()}`}</Text>
+            <Text>{"Recipe created"}</Text>
           </div>
-        )
-      })}
-    </div>
-  )
+        </div>
+      </div>
+    )
+  }
 
   return (
     <Page className={bss()} title={recipe && recipe.title}>
@@ -131,19 +141,22 @@ const PageRecipeEdit = () => {
             </div>
             {!editing && (
               <div className={bss("recipe_header_right")}>
-                {user && recipe.user._id !== user._id && (
-                  <Button
-                    icon="Restaurant"
-                    onClick={() => {
-                      if (window.confirm(`Fork "${recipe.title}"?`))
-                        fork(recipe._id).then((res) => {
-                          console.log(res.data.doc._id)
-                          fetchRecipe(res.data.doc._id)
-                        })
-                    }}
-                    label="Fork"
-                  />
-                )}
+                {user &&
+                  (!recipe.forked_from ||
+                    recipe.forked_from.user._id !== user._id) &&
+                  recipe.user._id !== user._id && (
+                    <Button
+                      icon="Restaurant"
+                      onClick={() => {
+                        if (window.confirm(`Fork "${recipe.title}"?`))
+                          fork(recipe._id).then((res) => {
+                            console.log(res.data.doc._id)
+                            fetchRecipe(res.data.doc._id)
+                          })
+                      }}
+                      label="Fork"
+                    />
+                  )}
                 {userLists && (
                   <MenuButton
                     icon="Add"

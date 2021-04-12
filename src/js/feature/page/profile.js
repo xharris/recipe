@@ -90,9 +90,9 @@ const PageProfile = () => {
               <ListView id={list} onBack={() => removeParam("list")} />
             ) : (
               [
-                <div key="lists" className={bss("lists")}>
-                  {lists &&
-                    lists.map((list) => (
+                lists && lists.length > 0 && (
+                  <div key="lists" className={bss("lists")}>
+                    {lists.map((list) => (
                       <Button
                         key={list._id}
                         className={bss("list")}
@@ -101,7 +101,8 @@ const PageProfile = () => {
                         outlined
                       />
                     ))}
-                </div>,
+                  </div>
+                ),
                 authUser && user && authUser._id === user._id && (
                   <Button
                     key="add"
