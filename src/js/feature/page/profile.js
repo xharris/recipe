@@ -15,16 +15,17 @@ import Button from "component/button"
 import Avatar from "feature/avatar"
 import ListView from "feature/list_view"
 import Text from "component/text"
-import { getUser } from "api/recipe"
 import { useAuthContext } from "component/auth"
-import * as apiUser from "api/user"
+import apiUser from "api/user"
 import apiList from "api/list"
+import apiRecipe from "api/recipe"
 import * as url from "util/url"
 import { useQuery } from "util"
 
 const bss = block("page_profile")
 
 const PageProfile = () => {
+  const { get_user } = apiRecipe
   const { username } = useParams()
   const [recipes, setRecipes] = useState()
   const [user, setUser] = useState()
@@ -37,8 +38,8 @@ const PageProfile = () => {
 
   useEffect(() => {
     if (username) {
-      getUser(username).then((res) => setRecipes(res.data.docs))
-      apiUser.get(username).then((res) => setUser(res.data.users[0]))
+      get_user(username).then(setRecipes)
+      apiUser.get({ values:[username], key:"username" }).then(setUser)
     }
   }, [username])
 

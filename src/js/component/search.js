@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react"
 import Input from "component/input"
 import Button from "component/button"
 import Text from "component/text"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import Icon from "component/icon"
 
 import { cx, block, css, pickFontColor } from "style"

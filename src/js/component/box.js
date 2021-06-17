@@ -1,5 +1,5 @@
 import React from "react"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import { block, cx, css } from "style"
 
 const bss = block("box")

@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import ReactMarkdown from "react-markdown"
 import Link from "component/link"
 import { block, cx, css, lightenDarken, pickFontColor } from "style"

@@ -3,7 +3,7 @@ import {
   createMuiTheme,
   ThemeProvider as MuiThemeProvider,
 } from "@material-ui/core/styles"
-import * as apiUser from "api/user"
+import apiUser from "api/user"
 import { css, pickFontColor } from "style"
 
 const default_theme = {
@@ -25,9 +25,7 @@ export const ThemeContext = createContext({
 export const useThemeContext = () => useContext(ThemeContext)
 
 const ThemeProvider = ({ theme: _theme, username, notheme, children }) => {
-  const [user_theme, fetchTheme] = apiUser.useTheme(
-    () => username && fetchTheme(username)
-  )
+  const [user_theme, fetchTheme] = apiUser.useRoute("get_theme")
 
   const [theme, setTheme] = useState(_theme || default_theme)
   const [muiTheme, setMuiTheme] = useState(
@@ -59,6 +57,10 @@ const ThemeProvider = ({ theme: _theme, username, notheme, children }) => {
       })
     )
   }, [theme])
+
+  useEffect(() => {
+    if (username) fetchTheme(username)
+  }, [username])
 
   useEffect(() => {
     const sel_theme = notheme ? default_theme : _theme || user_theme

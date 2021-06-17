@@ -8,11 +8,12 @@ import Text from "component/text"
 import RecipeEditor from "feature/recipe_editor"
 import { Editor, EditorState } from "draft-js"
 import "draft-js/dist/Draft.css"
-import { create } from "api/recipe"
+import apiRecipe from "api/recipe"
 
 const bss = block("page_recipe_add")
 
 const PageRecipeAdd = () => {
+  const { create } = apiRecipe
   const [text, setText] = useState()
   const [error, setError] = useState()
   const [editor, setEditor] = useState(() => EditorState.createEmpty())

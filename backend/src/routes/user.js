@@ -77,7 +77,7 @@ user.router.post("/get", (req, res) =>
     .where(req.body.key || "_id")
     .in(req.body.values)
     .exec(
-      (err, docs) =>
+      (err, docs = []) =>
         !queryCheck(res, err, docs.length > 0) &&
         status(200, res, {
           users: docs.map((d) => d.toJSON()),

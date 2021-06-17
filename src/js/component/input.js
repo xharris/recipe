@@ -3,7 +3,7 @@ import Tooltip from "@material-ui/core/Tooltip"
 import Button from "component/button"
 import Text from "component/text"
 import { useCombinedRef } from "util"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import { cx, css, block, lightenDarken } from "style"
 
 const bss = block("input")

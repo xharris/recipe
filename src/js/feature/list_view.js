@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react"
-import { block, css } from "style"
+import { bem, css } from "style"
 import {
   useRouteMatch,
   useParams,
@@ -15,9 +15,10 @@ import RecipeList from "feature/recipe_list"
 import { useAuthContext } from "component/auth"
 import apiList from "api/list"
 
-const bss = block("list_view")
+const bss = bem("list_view")
 
-const ListView = ({ id, onBack }) => {
+const ListView = ({ id, onBack, ...props }) => {
+  console.log(props)
   const { user } = useAuthContext()
   const [list, fetchList] = apiList.useRoute("get")
   const [name, setName] = useState()
@@ -33,7 +34,7 @@ const ListView = ({ id, onBack }) => {
         {onBack && <Button icon="ArrowBack" onClick={onBack} />}
       </div>
       <div className={bss("right")}>
-        <div className={bss("header")}>
+        <div className={bss("header", { editable: can_edit })}>
           <div className={bss("header_left")}>
             {can_edit ? (
               <Input

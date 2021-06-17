@@ -2,15 +2,21 @@ import { useState } from "react"
 import { notify, useNotify } from "util"
 const axios = require("axios")
 
-const url = (suffix) =>
+const constructUrl = (suffix) =>
   suffix.startsWith("http")
     ? suffix
     : `${process.env.REACT_APP_HOST}api/${suffix}`
 
+export const isCancel = axios.isCancel
+
+const tokens = {}
 const transform = (method, suffix, data, config) => {
+  const url = constructUrl(suffix)
   if (!config) config = {}
-  if (config.cancel) config.cancelToken = new axios.CancelToken(config.cancel)
-  return axios({ method, url: url(suffix), data, ...config })
+  if (tokens[url])
+    tokens[url].cancel()
+  tokens[url] = axios.CancelToken.source()
+  return axios({ method, url, data, cancelToken: tokens[url].token, ...config })
 }
 
 export const get = (...args) => transform("get", ...args)
@@ -30,6 +36,13 @@ export const del = (...args) => transform("delete", ...args)
 // route options
 //  withCredentials, method, route, doclist, docless, raw
 
+export const route = (method, route, withCredentials = false, doctype) =>
+  ({ route, method, withCredentials, 
+      docless: doctype === "docless",
+      doclist: doctype === "doclist",
+      raw: doctype === "raw"
+    })
+
 export const Api = (table, routes) => {
   const route_obj = {}
   for (const name in routes) {
@@ -46,21 +59,26 @@ export const Api = (table, routes) => {
       }
       // construct route with parameters
       let p = 0
+      if (!info.route) throw `No route given for '${table}.${name}'`
       const path = `${table}${info.route.replace(/:\w+/g, () => params[p++])}`
       // make api call
       const options = { ...info }
+      if (info.call)
+        info.call(options, ...args)
       return (info.method === "get"
         ? get(path, options)
         : transform(info.method, path, payload, options)
       )
         .then((res) =>
-          info.docless
-            ? res.data
+          info.res ? 
+            info.res(res) 
+            : info.docless
+          ? res.data
             : info.doclist
-            ? res.data.docs
+          ? res.data.docs
             : info.raw
-            ? res
-            : res.data.doc
+          ? res
+            : res.data.doc || res.data.data
         )
         .then((res) => {
           notify(table)

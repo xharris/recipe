@@ -1,25 +1,13 @@
-import * as api from "."
-import { useApi } from "util"
+import { Api, route } from "."
 
-export const create = ({ text }) =>
-  api.post("recipe/create", { text }, { withCredentials: true })
-export const getAll = () => api.get("recipe/all")
+const api = Api("recipe", {
+  create: route("post", "/create", true),
+  get_all: route("get", "/all", false, "doclist"),
+  get: route("get", "/:id"),
+  commit: route("put", "/:id/commit", true),
+  get_user: route("get", "/user/:username", false, "doclist"),
+  del: route("delete", "/:id", true),
+  fork: route("post", "/:id/fork", true)
+})
 
-export const useGetAll = () =>
-  useApi("recipe/all", () => api.get("recipe/all").then((res) => res.data.docs))
-
-export const useGet = () =>
-  useApi("recipe/:id", (id) =>
-    api.get(`recipe/${id}`).then((res) => res.data.doc)
-  )
-
-export const commit = (id, text) =>
-  api.put(`recipe/${id}/commit`, { text }, { withCredentials: true })
-
-export const getUser = (username) => api.get(`recipe/user/${username}`)
-
-export const del = (id) =>
-  api.del(`recipe/${id}`, {}, { withCredentials: true })
-
-export const fork = (id) =>
-  api.post(`recipe/${id}/fork`, {}, { withCredentials: true })
+export default api 

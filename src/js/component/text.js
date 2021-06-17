@@ -1,5 +1,5 @@
 import React, { createElement } from "react"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import { block, cx, css, pickFontColor } from "style"
 
 const bss = block("text")

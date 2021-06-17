@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback } from "react"
 import { cx, css, block } from "style"
 import { insertAtCursor } from "util"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import md5 from "util/md5"
 import * as apiFile from "api/file"
 

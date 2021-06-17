@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Switch, Route } from "react-router-dom"
 import AuthProvider from "component/auth"
 import { DndProvider } from "component/dragdrop"
 import SettingsProvider from "component/settings"
-import ThemeProvider from "feature/theme"
+import ThemeProvider from "component/theme"
+import { SnackbarProvider } from "notistack"
 import PageHome from "feature/page/home"
 import PageRecipeAdd from "feature/page/recipe_add"
 import PageRecipeView from "feature/page/recipe_view"
@@ -23,27 +24,29 @@ const App = () => {
           <AuthProvider>
             <SettingsProvider>
               <ThemeProvider>
-                <Switch>
-                  <Route path={url.home()} exact>
-                    <PageHome />
-                  </Route>
-                  <Route path={url.add_recipe()}>
-                    <PageRecipeAdd />
-                  </Route>
-                  <Route
-                    path={[
-                      url.edit_recipe(),
-                      url.view_recipe(),
-                      url.recipe_history(),
-                    ]}
-                    exact
-                  >
-                    <PageRecipeView />
-                  </Route>
-                  <Route path={url.profile()}>
-                    <PageProfile />
-                  </Route>
-                </Switch>
+                <SnackbarProvider>
+                  <Switch>
+                    <Route path={url.home()} exact>
+                      <PageHome />
+                    </Route>
+                    <Route path={url.add_recipe()}>
+                      <PageRecipeAdd />
+                    </Route>
+                    <Route
+                      path={[
+                        url.edit_recipe(),
+                        url.view_recipe(),
+                        url.recipe_history(),
+                      ]}
+                      exact
+                    >
+                      <PageRecipeView />
+                    </Route>
+                    <Route path={url.profile()}>
+                      <PageProfile />
+                    </Route>
+                  </Switch>
+                </SnackbarProvider>
               </ThemeProvider>
             </SettingsProvider>
           </AuthProvider>

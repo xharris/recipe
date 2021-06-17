@@ -7,12 +7,12 @@ import Text from "component/text"
 import Card from "component/card"
 import Avatar from "feature/avatar"
 import RecipeList from "feature/recipe_list"
-import { create, useGetAll } from "api/recipe"
+import apiRecipe from "api/recipe"
 
 const bss = block("page_home")
 
 const PageHome = () => {
-  const [recipes, fetchRecipes] = useGetAll()
+  const [recipes, fetchRecipes] = apiRecipe.useRoute("get_all")
 
   useEffect(() => {
     fetchRecipes()

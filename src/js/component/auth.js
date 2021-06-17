@@ -9,7 +9,8 @@ import { useLocation, useHistory } from "react-router-dom"
 import Cookies from "js-cookie"
 import { v4 as uuidv4 } from "uuid"
 
-import * as apiUser from "api/user"
+import { isCancel } from "api"
+import apiUser from "api/user"
 
 const AuthContext = createContext({
   signIn: () => {},
@@ -21,20 +22,23 @@ const AuthContext = createContext({
 export const useAuthContext = () => useContext(AuthContext)
 
 const AuthProvider = ({ allowPasswordless, children }) => {
+  const { login, logout, verify, add } = apiUser
   const location = useLocation()
   const history = useHistory()
   const [user, setUser] = useState()
   const [auth, setAuth] = useState()
 
   const signIn = (id, pwd, remember) =>
-    apiUser
-      .login({ id, pwd, remember })
-      .then((res) => setUser({ ...res.data.data }))
+    login({ id, pwd, remember })
+      .then(data => setUser({ ...data }))
 
-  const signOut = () => apiUser.logout().then((res) => setUser())
+  const signOut = () => 
+    logout()
+      .then(() => setUser())
 
   const signUp = (data) =>
-    apiUser.add(data).then(() => signIn(data.id, data.pwd))
+    add(data)
+      .then(() => signIn(data.id, data.pwd))
 
   const signUpNoPass = () => {
     const [id, pwd] = [uuidv4(), uuidv4()]
@@ -43,12 +47,11 @@ const AuthProvider = ({ allowPasswordless, children }) => {
 
   useEffect(() => {
     // check if user should still be logged in
-    apiUser
-      .verify()
-      .then((r) => setUser({ ...r.data.data }))
-      .catch(() => {
+    verify()
+      .then(data => setUser({ ...data }))
+      .catch(e => {
         if (allowPasswordless) signUpNoPass()
-        else signOut()
+        else if (!isCancel(e)) signOut()
       })
   }, [location.pathname])
 

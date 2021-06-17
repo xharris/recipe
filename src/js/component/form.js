@@ -14,7 +14,7 @@ import Icon from "component/icon"
 import Button from "component/button"
 import Text from "component/text"
 import Box from "component/box"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 
 import { block, cx, css, pickFontColor } from "style"
 const bss = block("form")

@@ -1,32 +1,36 @@
 .list_view {
   display: flex;
 
-  &--left,
-  &--right {
+  &__left,
+  &__right {
     display: flex;
     flex-direction: column;
   }
 
-  &--left {
+  &__left {
+    display: flex;
     margin-right: 15px;
   }
 
-  &--right {
+  &__right {
     flex: 0 1 100%;
   }
 
-  &--header {
+  &__header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin: 6px;
+
+    &:not(&--editable) {
+      margin: 6px;
+    }
   }
 
-  &--header > *:not(:last-child) {
+  &__header > *:not(:last-child) {
     margin-right: 15px;
   }
 
-  &--no_recipes {
+  &__no_recipes {
     margin: 6px;
   }
 }

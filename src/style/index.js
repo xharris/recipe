@@ -4,19 +4,19 @@ import { TinyColor } from "@ctrl/tinycolor"
 export const css = emotion.css
 export const cx = emotion.cx
 
-export const block = mainName => (...args) => {
+export const block = (mainName) => (...args) => {
   const states = {}
   args.forEach(
-    e =>
+    (e) =>
       typeof e === "object" &&
       Object.entries(e).forEach(
         ([k, v]) => k !== "undefined" && (states[k] = v)
       )
   )
-  const classes = args.filter(e => ["string", "boolean"].includes(typeof e))
+  const classes = args.filter((e) => ["string", "boolean"].includes(typeof e))
 
   const ret_class = [
-    classes.map(c => `${mainName}--${c}`),
+    classes.map((c) => `${mainName}--${c}`),
     Object.entries(states)
       .map(
         ([k, v]) =>
@@ -25,11 +25,42 @@ export const block = mainName => (...args) => {
             v !== true && typeof v !== "function" ? `-${v}` : ""
           }`
       )
-      .filter(cls => cls) // remove nulls
-      .join(" ")
+      .filter((cls) => cls) // remove nulls
+      .join(" "),
   ]
 
   return emotion.cx(classes.length === 0 && mainName, ...ret_class)
+}
+
+/*
+const bss = bem("list")
+<div className={bss()}>
+  <button className={bss("button", { type: "caution" })} />
+</div>
+
+results in :
+.list
+.list__button
+.list__button--type-caution
+*/
+export const bem = (block) => {
+  return (element, modifiers) => {
+    if (typeof element !== "string") {
+      modifiers = element
+      element = null
+    }
+    const classes = [
+      !element || element === block ? block : `${block}__${element}`,
+      ...(modifiers
+        ? Object.keys(modifiers).map((m) => {
+            if (typeof modifiers[m] === "boolean") {
+              if (modifiers[m] === true) return `${block}__${element}--${m}`
+            } else return `${block}__${element}--${m}-${modifiers[m]}`
+          })
+        : []),
+    ]
+    return emotion.cx(...classes)
+  }
 }
 
 export const pickFontColor = (bg, fg_color, amt) => {
@@ -39,7 +70,7 @@ export const pickFontColor = (bg, fg_color, amt) => {
   const rgb = {
     r: parseInt(match[1], 16) ** 2,
     g: parseInt(match[2], 16) ** 2,
-    b: parseInt(match[3], 16) ** 2
+    b: parseInt(match[3], 16) ** 2,
   }
   const brightness = Math.sqrt(0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b)
   if (fg_color)

@@ -1,7 +1,7 @@
 import React, { useState, forwardRef } from "react"
 import { Link, useRouteMatch, useHistory } from "react-router-dom"
 import Popover from "@material-ui/core/Popover"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import Tooltip from "@material-ui/core/Tooltip"
 import Text from "component/text"
 import Icon from "component/icon"
@@ -54,25 +54,27 @@ const Button = forwardRef(
       </>
     )
 
+    const color_back = getColor(color, bg, amt)
+    const color_front = getColor(color, bg, -amt)
+
     const style = css({
       borderWidth: type !== "link" ? thickness : 0,
-      borderColor: outlined ? getColor(color, bg, amt) : "transparent",
+      borderColor: outlined ? color_back : "transparent",
       textDecoration:
         (type === "link" || underline) &&
         !disabled &&
-        `underline ${getColor(bg, color, amt)}`,
+        `underline ${color_front}`,
       "& > *": {
-        color:
-          type === "link" ? getColor(bg, color, amt) : getColor(color, bg, amt),
+        color: color_back,
       },
       "&:hover": {
-        backgroundColor: type !== "link" && getColor(color, bg, amt),
+        backgroundColor: type !== "link" && color_back,
       },
       "&:hover > *": type !== "link" && {
-        borderColor: getColor(color, bg, amt),
-        color: getColor(color, bg, -amt),
+        borderColor: color_back,
+        color: color_front,
         textDecoration:
-          underline && !disabled && `underline ${getColor(color, color, -amt)}`,
+          underline && !disabled && `underline ${color_front}`,
       },
     })
 

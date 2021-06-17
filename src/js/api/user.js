@@ -1,32 +1,19 @@
-import * as api from "."
-import { useApi, useFetch } from "util"
+import { Api, route } from "."
 
-export const useTheme = fn_notify =>
-  useApi(
-    "user/theme",
-    user_id =>
-      api.get(`user/theme/${user_id}`).then(res => res.data._doc.theme),
-    props => api.put("user/theme/update", props, { withCredentials: true }),
-    fn_notify
-  )
+const _api = Api("user", {
+  get_theme: route("get", "/theme/:user_id"),
+  update_theme: route("put", "/theme/update", true),
+  get: { method:"post", route:"/get", res: res => res.data.users[0] },
+  get_multiple: route("post", "/get", false, "doclist"),
+  login: { method:"post", route:"/login", withCredentials: true, call: (opt, id, pwd) => {
+    opt.authorization = btoa(`${id}:${pwd}`)
+  } },
+  logout: route("post", "/logout", true),
+  add: route("post", "/add"),
+  verify: route("post", "/verify", true),
+  search: route("post", "/search", false, "doclist"),
+  update_disp_name: route("put", "/displayname", true),
+  get_disp_name: route("post", "/displayname/get")
+})
 
-export const get = values =>
-  api.post("user/get", { values: [].concat(values), key: "username" })
-export const login = ({ id, pwd, remember }) =>
-  api.post(
-    "user/login",
-    { remember },
-    { withCredentials: true, headers: { authorization: btoa(`${id}:${pwd}`) } }
-  )
-export const logout = () =>
-  api.post("user/logout", {}, { withCredentials: true })
-export const add = props => api.post("user/add", props)
-export const verify = () =>
-  api.post("user/verify", {}, { withCredentials: true })
-
-export const search = term => api.post("user/search", { term })
-export const useSearch = () =>
-  useFetch(term => search(term).then(res => res.data.docs))
-export const updateDispName = name =>
-  api.put("user/displayname", { name }, { withCredentials: true })
-export const getDispName = body => api.post("user/displayname/get", body)
+export default _api

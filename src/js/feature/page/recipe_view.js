@@ -13,7 +13,7 @@ import MenuButton from "component/menubutton"
 import { useAuthContext } from "component/auth"
 import RecipeEditor from "feature/recipe_editor"
 import diff from "diff"
-import { commit, useGet, del, fork } from "api/recipe"
+import apiRecipe from "api/recipe"
 import { profile, view_recipe, edit_recipe, recipe_history } from "util/url"
 import apiList from "api/list"
 import * as url from "util/url"
@@ -21,9 +21,10 @@ import * as url from "util/url"
 const bss = block("page_recipe_view")
 
 const PageRecipeEdit = () => {
+  const { commit, del, fork } = apiRecipe
+  const [recipe, fetchRecipe] = apiRecipe.useRoute("get")
   const params = useParams()
   const { user } = useAuthContext()
-  const [recipe, fetchRecipe] = useGet()
   const router_history = useHistory()
   const editing = useRouteMatch(url.edit_recipe())
   const history = useRouteMatch(url.recipe_history())
@@ -34,11 +35,7 @@ const PageRecipeEdit = () => {
   }, [user])
 
   useEffect(() => {
-    let call
-    if (params) call = fetchRecipe(params.id)
-    return () => {
-      if (call) call.cancel()
-    }
+    if (params) fetchRecipe(params.id)
   }, [params])
 
   const EditView = () => <RecipeEditor id={params.id} />
@@ -102,7 +99,13 @@ const PageRecipeEdit = () => {
         <div className={bss("change")}>
           <div className={bss("change_header")}>
             <Text>{`${date_created.toLocaleDateString()} - ${date_created.toLocaleTimeString()}`}</Text>
-            <Text>{"Recipe created"}</Text>
+            <Text>{`Recipe ${recipe.forked_from ? `forked from:` : "created"}`}</Text>
+            {recipe.forked_from && 
+              <Button
+                label={`${recipe.forked_from.user.display_name}'s ${recipe.forked_from.title}`}
+                type="link"
+                to={view_recipe(recipe.forked_from._id)}
+              />}
           </div>
         </div>
       </div>
@@ -190,7 +193,7 @@ const PageRecipeEdit = () => {
                   icon="Delete"
                   onClick={() => {
                     const name = window.prompt(
-                      `Are you sure you want to delete? Type "${recipe.title}" to confirm:`
+                      `Are you sure you want to delete? \nType "${recipe.title}" to confirm:`
                     )
                     if (name === recipe.title)
                       del(recipe._id)

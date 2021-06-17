@@ -1,7 +1,7 @@
 import React, { useState, useEffect, memo } from "react"
 import Text from "component/text"
 import ReactHtmlParser from "react-html-parser"
-import { useThemeContext } from "feature/theme"
+import { useThemeContext } from "component/theme"
 import { lookup } from "mime-types"
 import Video from "component/video"
 import * as apiUtil from "api/util"

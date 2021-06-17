@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Header from "feature/header"
 import Title from "component/title"
-import ThemeProvider from "feature/theme"
+import ThemeProvider from "component/theme"
 import { block, cx, css } from "style"
 
 const bss = block("page")
