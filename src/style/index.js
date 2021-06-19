@@ -63,6 +63,8 @@ export const bem = (block) => {
   }
 }
 
+export const isDark = (c) => new TinyColor(c).isDark()
+
 export const pickFontColor = (bg, fg_color, amt) => {
   amt = amt || 30
   if (!bg) return "#ffffff"

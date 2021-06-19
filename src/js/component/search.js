@@ -1,23 +1,38 @@
 import React, { useRef, useEffect, useState, useCallback } from "react"
-import { bem, css, cx } from "style"
+import { bem, css, cx, isDark } from "style"
 import Input from "component/input"
 import Icon from "component/icon"
 import Button from "component/button"
+import { QuickTheme } from "component/theme"
 import Chip from "@material-ui/core/Chip"
+import { makeStyles } from '@material-ui/core/styles';
+import * as Color from "@material-ui/core/colors"
 
 const bss = bem("search")
 
-const Block = ({ name, type, value, render, icon, clickable, variant, onDelete, onClick }) => {
-  return <Chip 
-    className={bss("block")} 
-    label={render ? render(value) : value} 
-    icon={icon && <Icon icon={icon}/>} 
-    clickable={clickable}
-    variant={variant}
-    onDelete={onDelete}
-    onPointerUp={onClick}
-    size="small"
-  />
+const Block = ({ name, type, value, render, icon, clickable, variant, color, onDelete, onClick }) => {
+  return (
+      <QuickTheme theme={color ? {
+        palette: {
+          primary: {
+            main: Color[color][500],
+            contrastText: isDark(color) ? Color.grey[100] : Color.grey[900]
+          }
+        }
+      } : null}>
+        <Chip 
+        className={bss("block")} 
+        color={color ? "primary" : "default"}
+        label={render ? render(value) : value} 
+        icon={icon && <Icon icon={icon}/>} 
+        clickable={clickable}
+        variant={variant}
+        onDelete={onDelete}
+        onPointerUp={onClick}
+        size="small"
+      />
+    </QuickTheme>
+  )
 }
 
 const Search = ({ 
@@ -112,6 +127,7 @@ const Search = ({
       {blocks.map((block) => 
         <Block 
           {...block} 
+          color={block.color}
           onClick={e => { e.stopPropagation() }}
           onDelete={() => {
             setBlocks([ ...blocks.filter(b => b.key !== block.key) ])
@@ -131,6 +147,7 @@ const Search = ({
           <Block 
             {...block} 
             tabIndex={0}
+            color={block.color}
             value={block.value || value} 
             clickable={!block.is_example}
             variant={block.is_example ? "outlined" : "default"}

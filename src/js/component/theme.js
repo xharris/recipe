@@ -87,4 +87,21 @@ const ThemeProvider = ({ theme: _theme, username, notheme, children }) => {
   )
 }
 
+export const QuickTheme = ({ theme:_theme, children }) => {
+  const [theme, setTheme] = useState(createMuiTheme())
+  useEffect(() => {
+    if (_theme)
+      setTheme(createMuiTheme(_theme))
+  }, [_theme])
+
+  return theme ? 
+  (<MuiThemeProvider theme={theme}>
+    {children}
+  </MuiThemeProvider>)
+  :
+  (<>
+    {children}
+  </>)
+}
+
 export default ThemeProvider

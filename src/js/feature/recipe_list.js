@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { bem, css, cx } from "style"
+import { bem, css } from "style"
 import { useHistory, Link } from "react-router-dom"
 import Button from "component/button"
 import Search from "component/search"
@@ -40,7 +40,9 @@ const RecipeList = ({ data, hideDisplayName, onRemove }) => {
         <Search 
           className={bss("search")}
           blocks={[
-            { name:"text", example:"text", icon:"FormatQuote", suggest: value => [`"${value}"`] },
+            { name:"text", example:"text", icon:"FormatQuote", color: 'green',
+              suggest: value => [`"${value}"`] 
+            },
             { name:"ingredient", example:"ingredient", icon:"BubbleChart", suggest: value => {
               // get list of similar ingredients from db
               // api.searchIngredient(value).then(docs => docs.map(d => d.value.join(' ')))
