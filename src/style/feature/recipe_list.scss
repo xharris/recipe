@@ -4,12 +4,12 @@
   width: 100%;
   font-size: 0.9rem;
 
-  * {
+  > * {
     font-size: inherit;
     white-space: nowrap;
   }
 
-  &--recipe {
+  &__recipe {
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -19,24 +19,28 @@
     margin-bottom: 2px;
   }
 
-  &--recipe > *:not(&--remove) {
+  &__recipe > *:not(&__remove) {
     padding: 5px 10px;
   }
 
-  td {
-    font-size: inherit;
-    padding: 4px 8px;
-  }
-
-  &--title {
+  &__title {
     font-weight: 600;
   }
 
-  &--desc {
+  &__desc {
     flex: 1 0 auto;
     color: #9e9e9e;
     text-overflow: ellipsis;
     overflow: hidden;
     white-space: nowrap;
+  }
+
+  &__header {
+    display: flex;
+    align-items: flex-start;
+  }
+
+  &__search {
+    flex: 1 1 100%;
   }
 }

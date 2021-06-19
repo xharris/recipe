@@ -1,237 +1,153 @@
-import React, { useState, useEffect, useRef } from "react"
+import React, { useRef, useEffect, useState, useCallback } from "react"
+import { bem, css, cx } from "style"
 import Input from "component/input"
-import Button from "component/button"
-import Text from "component/text"
-import { useThemeContext } from "component/theme"
 import Icon from "component/icon"
+import Button from "component/button"
+import Chip from "@material-ui/core/Chip"
 
-import { cx, block, css, pickFontColor } from "style"
+const bss = bem("search")
 
-const bss = block("search")
+const Block = ({ name, type, value, render, icon, clickable, variant, onDelete, onClick }) => {
+  return <Chip 
+    className={bss("block")} 
+    label={render ? render(value) : value} 
+    icon={icon && <Icon icon={icon}/>} 
+    clickable={clickable}
+    variant={variant}
+    onDelete={onDelete}
+    onPointerUp={onClick}
+    size="small"
+  />
+}
 
-const re_def_trigger = /[\s\w]+(:)/
-
-const Block = ({
-  type,
-  label,
-  icon,
-  isPlaintext,
-  onChange,
-  onDelete,
-  onSelect,
-  onCancel,
-  suggestions
+const Search = ({ 
+  className, 
+  active:_active,
+  placeholder = "Search...",
+  blocks:input_blocks = [],
+  onSearch = (()=>{})
 }) => {
-  const { getColor } = useThemeContext()
+  const [active, setActive] = useState(_active)
+  const [focused, setFocused] = useState()
+  const [blocks, setBlocks] = useState([])
+  const [suggestions, setSuggestions] = useState({})
+  const [value, setValue] = useState("")
   const el_input = useRef()
-  useEffect(() => {
-    if (el_input.current) {
-      el_input.current.focus()
+
+  const getKey = (type, item) => `${type}+${item.value}`
+
+  const generateSuggestions = useCallback((v) => {
+    let new_suggestions = {}
+
+    const addSuggestion = (type, list) => {
+      if (list.length > 0) {
+        new_suggestions = {...new_suggestions, [type]:list.map(l => ({ ...l, key:getKey(type, l) }))}
+        setSuggestions(new_suggestions)
+      }
     }
+
+    setSuggestions({})
+    for (const block of input_blocks) {
+      // show example block
+      if (focused && (!v || v.length <= 0)) {
+        let examples = [].concat(block.example)
+        if (examples.length > 0) {
+          examples.forEach(ex => {
+            addSuggestion(block.name, [{ ...block, is_example:true, value:ex }])
+          })
+        }
+      }
+      // text block with suggestions
+      else if (block.suggest && v && v.length > 0) {
+        Promise.resolve(block.suggest(v))
+          .then(info => addSuggestion(block.name, [].concat(info).map(t => ({ ...block, value:t, groups:[t] }))))
+      }
+      // normal input block
+      else if (block.regex) {
+        let found = false
+        for (const re of block.regex) {
+          // found a matching regex, break and add the block
+          if (!found && re[0].test(v)) {
+            if (re.length > 1)
+              block.value = v.replace(re[0], re[1])
+            block.groups = v.match(re[0]).slice(1)
+            addSuggestion(block.name, [block])
+            found = true
+          }
+        }
+      } else if (v && v.length > 0) {
+        addSuggestion(block.name, [block])
+      }
+    }
+  }, [setSuggestions, focused, input_blocks, suggestions, setSuggestions])
+  
+  useEffect(() => {
+    generateSuggestions(value)
+  }, [value, focused])
+
+  const refocus = useCallback(() => {
+    if (el_input.current)
+      el_input.current.focus()
   }, [el_input])
-  return (
-    <span
-      className={cx(
-        bss("block"),
-        css({
-          backgroundColor: getColor()
-        })
-      )}
+
+  return <div className={cx(bss(), className)}>
+    <Input
+      ref={el_input}
+      className={bss("input")}
+      placeholder={placeholder}
+      value={value}
+      onChange={e => setValue(e.target.value)}
+      onFocus={e => setFocused(true)}
+      onBlur={e => {
+        if (el_input.current && !el_input.current.contains(e.currentTarget))
+          setFocused(false)
+      }}
+      onSubmit={blocks.length > 0 ? () => onSearch(blocks.map(({ groups, value, name, key }) => ({ groups, value, name, key }))) : null}
+      onKeyDown={e => {
+        if (e.key === "Backspace" && value.length === 0 && blocks.length > 0) {
+          setBlocks([ ...blocks.slice(0,-1) ])
+        }
+      }}
     >
-      {icon && (
-        <Icon
-          className={css({
-            marginLeft: 4,
-            color: getColor(null, null, 10)
-          })}
-          icon={icon}
-        />
-      )}
-      <Text
-        className={bss("block_label")}
-        bg="secondary"
-        amt={-10}
-        title={type}
-        themed
-      >{`${icon ? "" : type + ": "}${label ? label : ""}`}</Text>
-      {!label && (
-        <Input
-          ref={el_input}
-          size="small"
-          onChange={onChange}
-          onKeyDown={e => {
-            const key = e.key
-            if (isPlaintext && key === "Enter") {
-              onSelect({
-                icon: "FormatQuote",
-                label: `"${e.target.value}"`,
-                value: e.target.value,
-                plaintext: true
-              })
-            }
-            if (key === "Escape") onCancel()
+      {blocks.map((block) => 
+        <Block 
+          {...block} 
+          onClick={e => { e.stopPropagation() }}
+          onDelete={() => {
+            setBlocks([ ...blocks.filter(b => b.key !== block.key) ])
+            refocus()
           }}
         />
       )}
-      <Button
-        icon="Close"
-        color="secondary"
-        bg="secondary"
-        onClick={e => onDelete(e)}
-        tabIndex={-1}
-      />
-      {suggestions && (
-        <div className={bss("suggestions")}>
-          {suggestions.map(s => (
-            <Button
-              key={s.value}
-              className={bss("suggest")}
-              label={s.label}
-              onClick={() => onSelect(s)}
-              amt={30}
-            />
-          ))}
-        </div>
-      )}
-    </span>
-  )
-}
-
-const Search = ({
-  active,
-  blocks,
-  suggestion,
-  placeholder,
-  className,
-  onSearch,
-  onChange,
-  defaultValue,
-  onOpen,
-  onClose
-}) => {
-  const [searching, setSearching] = useState(active)
-  const [terms, setTerms] = useState([])
-  const [fullTerms, setFullTerms] = useState(defaultValue || [])
-  const [value, setValue] = useState("")
-  const [suggestions, setSuggestions] = useState()
-  const [focused, setFocused] = useState()
-  const el_input = useRef()
-
-  const clearSearch = () => {
-    setValue("")
-    setTerms([])
-  }
-
-  useEffect(() => {
-    searching ? onOpen && onOpen() : onClose && onClose()
-  }, [searching])
-
-  useEffect(() => {
-    if (onChange) onChange(fullTerms)
-  }, [fullTerms])
-
-  return searching || active ? (
-    <div className={cx(bss(), css({}), className)}>
-      {!active && (
-        <Button
-          icon="ArrowBack"
-          title="Cancel"
-          className={css({
-            marginLeft: 3
-          })}
-          onClick={() => clearSearch() || setSearching(false) || onSearch([])}
-        />
-      )}
-      <Input
-        ref={el_input}
-        className={bss("input")}
-        placeholder={placeholder}
-        value={value}
-        dirty={value.length > 0 || terms.length > 0}
-        onChange={e => {
-          setValue(e.target.value)
-          if (blocks) {
-            blocks.forEach(b => {
-              const match = e.target.value.match(b || re_def_trigger)
-              if (match) {
-                const term = match.slice(1).join(".")
-                if (!terms.some(t => t === term)) {
-                  setTerms([...terms, term])
-                  setValue("")
-                }
-              }
-            })
-          }
-        }}
-        onKeyDown={e => {
-          const key = e.key
-          if (key === "Backspace" && (!value || value.length === 0)) {
-            if (terms.length > 0) setTerms(terms.slice(0, -1))
-            else if (fullTerms.length > 0) setFullTerms(fullTerms.slice(0, -1))
-          }
-        }}
-        onClear={active && clearSearch}
-        submitIcon={!active && "Search"}
-        onSubmit={active ? null : () => onSearch(fullTerms)}
-      >
-        {fullTerms.map(t => (
-          <Block
-            key={`fullterm-${t.value}`}
-            label={t.label}
-            icon={t.icon}
-            type={t.type}
-            onDelete={() =>
-              setFullTerms(
-                fullTerms.filter(
-                  term => !(term.type === t.type && term.value === t.value)
-                )
-              )
-            }
+    </Input>
+    <div 
+      className={bss("suggestions")}
+    >
+      {Object.keys(suggestions).length > 0 && <div className={bss("helper")}>{
+        value && value.length > 0 ? "Click to add..." : "Examples:"
+      }</div>}
+      {Object.entries(suggestions).reduce((result, [type, slist]) => 
+        result.concat(slist.map(block => 
+          <Block 
+            {...block} 
+            tabIndex={0}
+            value={block.value || value} 
+            clickable={!block.is_example}
+            variant={block.is_example ? "outlined" : "default"}
+            onClick={!block.is_example ? (e => {
+              e.stopPropagation()
+              e.preventDefault()
+              if (!blocks.some(b => b.key === block.key))
+                setBlocks([ ...blocks, block ])
+              // return focus to the text input and clear it
+              setValue("")
+              refocus()
+            }) : null}
           />
-        ))}
-        {terms.map((t, i) => (
-          <Block
-            key={`term-${t}`}
-            type={t}
-            isPlaintext={!suggestion || !suggestion[t]}
-            onCancel={() => {
-              setTerms(terms.filter(t2 => t2 !== t))
-              if (el_input.current) el_input.current.focus()
-            }}
-            onSelect={s => {
-              s.type = t
-              if (
-                !fullTerms.some(
-                  term => term.type === t && term.value === s.value
-                )
-              ) {
-                setFullTerms([...fullTerms, s])
-                setTerms(terms.filter(t2 => t2 !== s.type))
-
-                if (el_input.current) el_input.current.focus()
-              }
-            }}
-            onDelete={() => setTerms(terms.filter((_, i2) => i2 !== i))}
-            onChange={e => {
-              // TODO: what to do if 't' is uppercase? Ex. user/User
-              if (suggestion && suggestion[t]) {
-                suggestion[t](setSuggestions, e.target.value)
-              } else if (suggestions) {
-                setSuggestions()
-              }
-              setFocused(t)
-            }}
-            suggestions={focused === t && suggestions}
-          />
-        ))}
-      </Input>
+        ))
+      , [])}
     </div>
-  ) : (
-    <div className={cx(bss(), className)}>
-      <Button icon="Search" title="Search" onClick={() => setSearching(true)} />
-      {/*<Text className={bss("text")}>{inactiveText}</Text>*/}
-    </div>
-  )
+  </div>
 }
 
 export default Search

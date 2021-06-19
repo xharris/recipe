@@ -1,4 +1,4 @@
-import React, { useState, useRef, forwardRef, useCallback } from "react"
+import React, { useState, useEffect, useRef, forwardRef, useCallback } from "react"
 import Tooltip from "@material-ui/core/Tooltip"
 import Button from "component/button"
 import Text from "component/text"
@@ -22,17 +22,20 @@ const Input = forwardRef(
       size,
       onClear,
       onSubmit,
-      submitIcon,
+      submitIcon = "Done",
       dirty,
       width,
       noWrap,
       label,
+      onFocus = (()=>{}),
+      onBlur = (()=>{}),
       ...props
     },
     ref
   ) => {
     const { theme, getColor } = useThemeContext()
     const el_input = useRef()
+    const el_maindiv = useRef()
     const comboref = useCombinedRef(ref, el_input)
     const [focused, setFocused] = useState()
 
@@ -56,6 +59,7 @@ const Input = forwardRef(
         className={cx(bss(), className)}
       >
         <div
+          ref={el_maindiv}
           className={cx(
             bss("container", { focused }),
             css({
@@ -65,8 +69,8 @@ const Input = forwardRef(
                 border: `1px solid ${getColor(color, bg)}`,
               },
               boxShadow:
-                !disabled &&
                 focused &&
+                !disabled &&
                 `0px 0px 3px 1px ${getColor(color, bg)}`,
               border:
                 (outlined || focused) &&
@@ -78,11 +82,12 @@ const Input = forwardRef(
             })
           )}
           onClick={(e) => {
-            // console.log("here")
             if (
               comboref &&
               comboref.current &&
-              e.currentTarget === comboref.current
+              el_maindiv && 
+              el_maindiv.current &&
+              (e.currentTarget === comboref.current || e.currentTarget === el_maindiv.current)
             ) {
               comboref.current.focus()
             }
@@ -104,8 +109,8 @@ const Input = forwardRef(
                   height: size === "small" ? 13 : 24,
                 })
               )}
-              onFocus={() => setFocused(true)}
-              onBlur={() => setFocused(false)}
+              onFocus={(e) => onFocus(e) || setFocused(true)}
+              onBlur={(e) => onBlur(e) || setFocused(false)}
               onKeyDown={(e) => onSubmit && e.key === "Enter" && submit(e)}
               disabled={disabled}
               {...props}
